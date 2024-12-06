@@ -11,7 +11,6 @@ import { ToastContainer, toast, ToastOptions } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import Modal from "./Modal";
 import axios from "axios";
-import { getBaseUrl } from "../utils/helper";
 
 interface ImovelPracas {
   originalPrice: number;

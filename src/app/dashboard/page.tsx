@@ -25,11 +25,7 @@ export default function Page() {
   const renderView = () => {
     switch (activeView) {
       case "imoveis":
-        return (
-          <>
-            <AuctionsPropertiesView />
-          </>
-        );
+        return <AuctionsPropertiesView />;
       case "veiculos":
         return <div>Exibindo visão de Veículos.</div>;
       case "maquinas":
@@ -43,32 +39,32 @@ export default function Page() {
 
   return (
     <SidebarProvider>
-      <AppSidebar onMenuSelect={(view) => setActiveView(view)} />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 relative">
-          <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 h-4" />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">Dashboard</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>{activeView}</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-          <div className="absolute right-4 top-4">
-            <ModeToggle />
-          </div>
-        </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          {renderView()}
-        </div>
-      </SidebarInset>
+      <div className="flex h-screen">
+        <AppSidebar onMenuSelect={(view) => setActiveView(view)} />
+        <SidebarInset className="flex flex-1 flex-col overflow-hidden">
+          <header className="sticky top-0 z-10 flex h-12 items-center bg-[#08A0A0] border-b px-4">
+            <div className="flex w-full items-center justify-between">
+              <div className="flex items-center gap-2">
+                <SidebarTrigger className="-ml-1 text-white" />
+                <Separator orientation="vertical" className="mr-2 h-4" />
+                <Breadcrumb>
+                  <BreadcrumbList>
+                    <BreadcrumbItem className="hidden md:block">
+                      <BreadcrumbLink className="text-white" href="#">Dashboard</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator className="hidden md:block text-white" />
+                    <BreadcrumbItem>
+                      <BreadcrumbPage className="text-white">{activeView}</BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </BreadcrumbList>
+                </Breadcrumb>
+              </div>
+              <ModeToggle />
+            </div>
+          </header>
+          <main className="flex-1 overflow-y-auto p-4">{renderView()}</main>
+        </SidebarInset>
+      </div>
     </SidebarProvider>
   );
 }
