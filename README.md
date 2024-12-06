@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🖥️ Projeto Next.js - Leilões do Brasil
 
-## Getting Started
+Bem-vindo ao projeto **Leilões do Brasil**, uma aplicação frontend moderna desenvolvida com **Next.js e Shadcn UI (Default)**. Este projeto é ideal para criar aplicações web rápidas, responsivas e otimizadas.
 
-First, run the development server:
+## 📦 Instalação
 
-```bash
-npm run dev
-# or
+Siga os passos abaixo para configurar o projeto em sua máquina:
+
+```sh
+git clone git@github.com:leiloesdobrasil/frontend-leiloesdobrasil.git
+cd leiloesdobrasil-front-shadcn
+   ```
+```sh
+yarn install
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Depois, abra seu navegador e acesse: http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Scripts Disponíveis
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Os seguintes scripts podem ser usados para gerenciar o projeto:
 
-## Learn More
+Inicia o servidor de desenvolvimento:
 
-To learn more about Next.js, take a look at the following resources:
+```sh
+yarn dev 
+   ```
+Compila o projeto para produção:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sh
+yarn build 
+   ```
+Inicia o servidor de produção (necessita de build prévio):
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```sh
+yarn start
+   ```
+Analisa o código em busca de problemas de estilo ou erros:
+```sh
+yarn run lint
+   ```
 
-## Deploy on Vercel
+## 🌟 Funcionalidades
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Renderização híbrida: Suporte para SSR (Server-Side Rendering) e SSG (Static Site Generation).
+- Hot Reloading: Alterações refletem instantaneamente no navegador.
+- SEO otimizado: Ferramentas integradas para melhorar a performance em motores de busca.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Se precisar de algo mais, é só pedir! 🚀
+Feito com ❤️ por @vinirteuber.
+
+
