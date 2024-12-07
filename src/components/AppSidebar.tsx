@@ -124,13 +124,17 @@ export function AppSidebar({
 }: React.ComponentProps<typeof Sidebar> & {
   onMenuSelect: (view: string) => void;
 }) {
+  const handleMenuItemClick = (title: string) => {
+    onMenuSelect(title.toLowerCase());
+  };
+
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <a href="#" onClick={() => handleMenuItemClick("dashboard")}>
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <Command className="size-4" />
                 </div>
@@ -149,11 +153,26 @@ export function AppSidebar({
         <NavMain
           items={data.navMain.map((item) => ({
             ...item,
-            onClick: () => onMenuSelect(item.title.toLowerCase()),
+            onClick: () => handleMenuItemClick(item.title),
+            items: item.items?.map((subItem) => ({
+              ...subItem,
+              onClick: () => handleMenuItemClick(subItem.title),
+            })),
           }))}
         />
-        <NavProjects projects={data.projects} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavProjects
+          projects={data.projects.map((project) => ({
+            ...project,
+            onClick: () => handleMenuItemClick(project.name),
+          }))}
+        />
+        <NavSecondary
+          items={data.navSecondary.map((item) => ({
+            ...item,
+            onClick: () => handleMenuItemClick(item.title),
+          }))}
+          className="mt-auto"
+        />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

@@ -11,6 +11,7 @@ import { ToastContainer, toast, ToastOptions } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import Modal from "./Modal";
 import axios from "axios";
+import { Calendar } from "lucide-react";
 
 interface ImovelPracas {
   originalPrice: number;
@@ -230,22 +231,21 @@ export default function CardAuction({ items }: CardAuctionProps) {
           return (
             <div
               key={index}
-              className={`relative w-[300px] m-1 shadow-lg transform hover:-translate-y-2 transition-transform duration-300 ease-in-out flex flex-col justify-between flex-warp 
-                bg-[#ECF1F4] dark:bg-[#505D6E] dark:text-white
+              className={`relative w-[310px] p-3 m-1 shadow-lg transform hover:-translate-y-2 transition-transform duration-300 ease-in-out flex flex-col justify-between flex-warp 
 `}
               style={{
-                borderRadius: "8px",
+                borderRadius: "16px",
               }}
             >
               <div
                 className="absolute inset-0 z-0"
                 style={{
-                  borderRadius: "8px",
+                  borderRadius: "16px",
                 }}
               >
                 <div
                   style={{
-                    borderRadius: "8px",
+                    borderRadius: "16px",
                   }}
                   className={`w-full h-full bg-white dark:bg-[#1F1F23] dark:text-white"
                   }`}
@@ -259,9 +259,12 @@ export default function CardAuction({ items }: CardAuctionProps) {
                   <Image
                     src={item.photos === "[]" ? CardImage : imageCard[0]}
                     alt={item.title}
-                    className="h-[200px] w-full object-cover scale-125"
-                    width={300}
-                    height={200}
+                    className="h-[200px] w-full object-cover border border-gray-300"
+                    style={{
+                      borderRadius: "6px",
+                    }}
+                    width={272} // Ajuste o tamanho para caber no novo layout com bordas
+                    height={180} // Ajuste a altura proporcional ao novo layout
                   />
                   <button
                     onClick={() => toggleVisibility(item.id)}
@@ -285,7 +288,7 @@ export default function CardAuction({ items }: CardAuctionProps) {
                   </button>
                 </div>
 
-                <div className="p-5">
+                <div>
                   <h1
                     id={tooltipId}
                     className="Onest font-bold mb-1 truncate cursor-pointer "
@@ -295,21 +298,21 @@ export default function CardAuction({ items }: CardAuctionProps) {
 
                   {/* Flags */}
                   {hasDiscount && (
-                    <span className="Inter mr-1 mb-1 inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
-                      <span className="Inter w-2 h-2 me-1 bg-yellow-500 rounded-full"></span>
+                    <span className="font-geist-mono mr-1 mb-1 inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-1.5 py-0.4 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
+                      <span className="font-geist-mono w-2 h-2 me-1 bg-yellow-500 rounded-full"></span>
                       {item.discount + "%"}
                     </span>
                   )}
                   {multiplePayments &&
                     item.typePayments &&
                     item.typePayments.replace(/[\[\]'"]/g, "") !== "" && (
-                      <span className="Inter mb-1 mr-1 inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                        <span className="Inter w-2 h-2 me-1 bg-blue-500 rounded-full"></span>
+                      <span className="font-geist-mono mb-1 mr-1 inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-1.5 py-0.4 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                        <span className="font-geist-mono w-2 h-2 me-1 bg-blue-500 rounded-full"></span>
                         {item.typePayments.replace(/[\[\]'"]/g, "")}
                       </span>
                     )}
                   {hasPropertyType && (
-                    <span className="Inter mb-1 inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                    <span className="font-geist-mono mb-1 inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-1.5 py-0.4 rounded-full dark:bg-green-900 dark:text-green-300">
                       <span className="w-2 h-2 me-1 bg-green-500 rounded-full"></span>
                       {item.propertyType}
                     </span>
@@ -319,81 +322,79 @@ export default function CardAuction({ items }: CardAuctionProps) {
                     anchorSelect={`#${tooltipId}`}
                     place="top"
                     content={item.title}
-                    className="tooltip-content Inter"
+                    className="tooltip-content font-geist-mono"
                   />
                   <p
-                    className={`text-sm mb-4 text-gray-700 dark:text-gray-100`}
+                    className={`text-xs dark:text-gray-400 text-gray-600 pointer truncate mb-2`}
                   >
                     {item.road.charAt(0).toUpperCase() +
                       item.road.slice(1).toLowerCase()}
                   </p>
 
-                  <div className="mb-4">
-                    {item.discountedPrice && (
-                      <div className="flex items-center">
-                        <h4 className="Inter line-through text-sm text-red-400 mr-3">
+                  <div className=" space-x-[13px] w-full">
+                    <div className="mb-4">
+                      {item.discountedPrice ? (
+                        <h4 className="font-geist-mono line-through text-xs text-red-400 mr-3">
                           {formattedPrice(item.originalPrice)}
                         </h4>
-                        <MdDiscount className="Inter line-through text-sm text-red-400 mr-3" />
-                      </div>
-                    )}
-
-                    <h1 className="Inter text-2xl font-semibold text-[#08A0A0]">
-                      {item.discountedPrice
-                        ? formattedPrice(item.discountedPrice)
-                        : formattedPrice(item.originalPrice)}
-                    </h1>
-                  </div>
-
-                  <div className="text-sm text-gray-500 dark:text-gray-300 mb-4">
-                    <div className="flex items-center mb-5">
-                      <div className="flex items-center justify-center w-8 h-8 bg-[#08A0A0] rounded-full mr-2">
-                        <FaCalendarAlt className="text-white" />
-                      </div>
-                      <div>
-                        <span
-                          className={`Inter text-xs block mb-1 text-gray-700 dark:text-gray-100`}
-                        >
-                          1° leilão
-                        </span>
-                        <span
-                          className={`Inter text-gray-700 dark:text-gray-100
-                          `}
-                        >
-                          {dataCadastroFormatada}
-                        </span>
-                      </div>
+                      ) : (
+                        <div className="h-5 w-20" />
+                      )}
+                      <h1 className="font-geist-mono text-xl items-center font-semibold dark:text-green-400 text-green-600">
+                        {item.discountedPrice
+                          ? formattedPrice(item.discountedPrice)
+                          : formattedPrice(item.originalPrice)}
+                      </h1>
                     </div>
-                    {/* Linha separadora */}
-                    <div className="flex items-center">
-                      <div className="flex items-center justify-center w-8 h-8 bg-[#08A0A0] rounded-full mr-2">
-                        <FaCalendarAlt className="text-white" />
-                      </div>
-                      <div>
-                        <span
-                          className={`Inter text-xs block mb-1 text-gray-700 dark:text-gray-100
-                        `}
-                        >
-                          2° leilão
-                        </span>
-                        <span
-                          className={`Inter text-gray-700 dark:text-gray-100`}
-                        >
-                          {dataFimFormatada}
-                        </span>
+
+                    <div className="flex">
+                      <div className="flex mb-2  space-x-8">
+                        <div className="flex items-center mb-5">
+                          <div>
+                            <div className="flex items-center dark:text-gray-400 text-gray-600">
+                              <Calendar className="w-4 h-4 mr-2 dark:text-gray-400 text-gray-600" />
+                              <div>
+                                <span className="text-xs block">1° leilão</span>
+                                <span className="text-sm">
+                                  {dataCadastroFormatada}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center mb-5">
+                          <div>
+                            <div className="flex items-center dark:text-gray-400 text-gray-600">
+                              <Calendar className="w-4 h-4 mr-2 dark:text-gray-400 text-gray-600" />
+                              <div>
+                                <span className="text-xs block">2° leilão</span>
+                                <span className="text-sm">
+                                  {dataFimFormatada}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="p-5 relative z-10">
+              <div className="relative z-10 flex">
                 <button
                   type="button"
-                  className="Onest more-info w-full rounded-md bg-gradient-to-r from-[#08A0A0] to-[#08A0A0] hover:from-[#08A0A0] hover:to-[#08A0A0] text-white px-4 py-2 font-semibold shadow-md hover:shadow-lg transition-all duration-300"
+                  className=" mr-4 more-info w-full bg-[#08A0A0] text-xs text-white font-bold py-2.5 px-4 rounded"
                   onClick={() => openModal(item)}
                 >
                   Saiba Mais
+                </button>
+                <button
+                  type="button"
+                  className=" more-info w-full text-xs dark:bg-[#363636] bg-[#e9e9e9] dark:text-white text-black font-bold py-2.5 px-5 rounded"
+                  onClick={() => openModal(item)}
+                >
+                  Abrir no maps
                 </button>
               </div>
             </div>

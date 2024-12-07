@@ -152,8 +152,19 @@ export function AppSidebar({
             onClick: () => onMenuSelect(item.title.toLowerCase()),
           }))}
         />
-        <NavProjects projects={data.projects} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavProjects
+          projects={data.projects.map((project) => ({
+            ...project,
+            onClick: () => onMenuSelect(project.name),
+          }))}
+        />
+        <NavSecondary
+          items={data.navSecondary.map((item) => ({
+            ...item,
+            onClick: () => onMenuSelect(item.title),
+          }))}
+          className="mt-auto"
+        />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
