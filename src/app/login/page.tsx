@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useRouter } from "next/navigation";
+import { getBaseUrl } from "@/utils/helper";
 
 interface LoginForm {
   email: string;
@@ -13,14 +13,11 @@ interface LoginForm {
 }
 
 export default function Login() {
-  const router = useRouter();
-
   const [formData, setFormData] = useState<LoginForm>({
     email: "",
     password: "",
     remember: false,
   });
-  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -32,25 +29,20 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(null);
     try {
-      const response = await fetch(
-        "https://api.leiloesdobrasil.com.br/api/v1/web/users/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-          }),
-        }
-      );
+      const response = await fetch(`${getBaseUrl()}/users/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
-        setError(errorData.error || "Erro ao fazer login.");
         toast.error(errorData.error || "Erro ao fazer login.", {
           position: "bottom-right",
           autoClose: 5000,
@@ -58,14 +50,12 @@ export default function Login() {
         return;
       }
 
-      // Verifique a estrutura da resposta da API
       const responseData = await response.json();
       const token = responseData.data?.token;
       const fullName = responseData.data?.fullName;
 
       if (token) {
-        // Certifique-se de que está armazenando o token com a chave correta
-        sessionStorage.setItem("token", token); // Alterei de "Token" para "token"
+        sessionStorage.setItem("token", token);
         sessionStorage.setItem("userEmail", formData.email);
         sessionStorage.setItem("userName", fullName);
 
@@ -74,10 +64,8 @@ export default function Login() {
           autoClose: 5000,
         });
 
-        // router.push("/billing");
         window.location.href = "/dashboard";
       } else {
-        setError("Token não encontrado.");
         toast.error("Token não encontrado.", {
           position: "bottom-right",
           autoClose: 5000,
@@ -85,13 +73,11 @@ export default function Login() {
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        setError(error.message);
         toast.error(error.message, {
           position: "bottom-center",
           autoClose: 5000,
         });
       } else {
-        setError("Erro desconhecido.");
         toast.error("Erro desconhecido.", {
           position: "bottom-center",
           autoClose: 5000,

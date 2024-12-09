@@ -1,4 +1,3 @@
-import { FontFamily } from "./node_modules/csstype/index.d";
 import type { Config } from "tailwindcss";
 
 export default {

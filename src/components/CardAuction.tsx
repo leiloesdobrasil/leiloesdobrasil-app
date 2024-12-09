@@ -5,13 +5,13 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
-import { FaCalendarAlt, FaHeart, FaEye, FaEyeSlash } from "react-icons/fa";
-import { MdDiscount } from "react-icons/md";
+import { FaHeart, FaEye, FaEyeSlash } from "react-icons/fa";
 import { ToastContainer, toast, ToastOptions } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import Modal from "./Modal";
 import axios from "axios";
 import { Calendar } from "lucide-react";
+import { getBaseUrl } from "@/utils/helper";
 
 interface ImovelPracas {
   originalPrice: number;
@@ -45,8 +45,6 @@ interface CardAuctionProps {
 }
 
 export default function CardAuction({ items }: CardAuctionProps) {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<ImovelProps | null>(null);
   const [favoritedItems, setFavoritedItems] = useState<Set<number>>(new Set());
   const [hiddenItems, setHiddenItems] = useState<Set<number>>(new Set());
 
@@ -62,15 +60,12 @@ export default function CardAuction({ items }: CardAuctionProps) {
       const isFavorited = favoritedItems.has(index);
 
       if (isFavorited) {
-        await axios.delete(
-          `https://api.leiloesdobrasil.com.br/api/v1/web/auctions/remove/toggle`,
-          {
-            data: { auctionId: id },
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        await axios.delete(`${getBaseUrl()}/auctions/remove/toggle`, {
+          data: { auctionId: id },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         setFavoritedItems((prev) => {
           const newFavorites = new Set(prev);
@@ -81,7 +76,7 @@ export default function CardAuction({ items }: CardAuctionProps) {
         toast.success("Leilão removido dos favoritos!", toastConfig);
       } else {
         await axios.post(
-          `https://api.leiloesdobrasil.com.br/api/v1/web/auctions/toggle`,
+          `${getBaseUrl()}/auctions/toggle`,
           { auctionId: id, liked: true },
           {
             headers: {
@@ -110,15 +105,12 @@ export default function CardAuction({ items }: CardAuctionProps) {
       const isHidden = hiddenItems.has(Number(id));
 
       if (isHidden) {
-        await axios.delete(
-          `https://api.leiloesdobrasil.com.br/api/v1/web/auctions/remove/toggle`,
-          {
-            data: { auctionId: id },
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        await axios.delete(`${getBaseUrl()}/auctions/remove/toggle`, {
+          data: { auctionId: id },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         setHiddenItems((prev) => {
           const newHidden = new Set(prev);
@@ -129,7 +121,7 @@ export default function CardAuction({ items }: CardAuctionProps) {
         toast.success("O leilão deixou de ser oculto.", toastConfig);
       } else {
         await axios.post(
-          `https://api.leiloesdobrasil.com.br/api/v1/web/auctions/toggle`,
+          `${getBaseUrl()}/auctions/toggle`,
           { auctionId: id, liked: false },
           {
             headers: {
@@ -162,28 +154,6 @@ export default function CardAuction({ items }: CardAuctionProps) {
     progress: undefined,
     theme: "light dark:dark",
   };
-
-  const openModal = (item: ImovelProps) => {
-    setSelectedItem(item);
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-    setSelectedItem(null);
-  };
-
-  useEffect(() => {
-    if (modalIsOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [modalIsOpen]);
 
   useEffect(() => {
     const initialFavorites = new Set(
@@ -263,8 +233,8 @@ export default function CardAuction({ items }: CardAuctionProps) {
                     style={{
                       borderRadius: "6px",
                     }}
-                    width={272} // Ajuste o tamanho para caber no novo layout com bordas
-                    height={180} // Ajuste a altura proporcional ao novo layout
+                    width={272}
+                    height={180}
                   />
                   <button
                     onClick={() => toggleVisibility(item.id)}
@@ -291,14 +261,14 @@ export default function CardAuction({ items }: CardAuctionProps) {
                 <div>
                   <h1
                     id={tooltipId}
-                    className="Onest font-bold mb-1 truncate cursor-pointer "
+                    className="Onest font-bold truncate cursor-pointer "
                   >
                     {item.title}
                   </h1>
 
                   {/* Flags */}
                   {hasDiscount && (
-                    <span className="font-geist-mono mr-1 mb-1 inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-1.5 py-0.4 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
+                    <span className="font-geist-mono mr-1 mb-2 inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-1.5 py-0.4 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
                       <span className="font-geist-mono w-2 h-2 me-1 bg-yellow-500 rounded-full"></span>
                       {item.discount + "%"}
                     </span>
@@ -306,13 +276,13 @@ export default function CardAuction({ items }: CardAuctionProps) {
                   {multiplePayments &&
                     item.typePayments &&
                     item.typePayments.replace(/[\[\]'"]/g, "") !== "" && (
-                      <span className="font-geist-mono mb-1 mr-1 inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-1.5 py-0.4 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                      <span className="font-geist-mono mb-2 mr-1 inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-1.5 py-0.4 rounded-full dark:bg-blue-900 dark:text-blue-300">
                         <span className="font-geist-mono w-2 h-2 me-1 bg-blue-500 rounded-full"></span>
                         {item.typePayments.replace(/[\[\]'"]/g, "")}
                       </span>
                     )}
                   {hasPropertyType && (
-                    <span className="font-geist-mono mb-1 inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-1.5 py-0.4 rounded-full dark:bg-green-900 dark:text-green-300">
+                    <span className="font-geist-mono mb-2 inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-1.5 py-0.4 rounded-full dark:bg-green-900 dark:text-green-300">
                       <span className="w-2 h-2 me-1 bg-green-500 rounded-full"></span>
                       {item.propertyType}
                     </span>
@@ -385,14 +355,12 @@ export default function CardAuction({ items }: CardAuctionProps) {
                 <button
                   type="button"
                   className=" mr-4 more-info w-full bg-[#08A0A0] text-xs text-white font-bold py-2.5 px-4 rounded"
-                  onClick={() => openModal(item)}
                 >
                   Saiba Mais
                 </button>
                 <button
                   type="button"
                   className=" more-info w-full text-xs dark:bg-[#363636] bg-[#e9e9e9] dark:text-white text-black font-bold py-2.5 px-5 rounded"
-                  onClick={() => openModal(item)}
                 >
                   Abrir no maps
                 </button>
@@ -403,12 +371,6 @@ export default function CardAuction({ items }: CardAuctionProps) {
       ) : (
         <></>
       )}
-      {/* <Modal
-        isOpen={modalIsOpen}
-        closeModal={closeModal}
-        selectedItem={selectedItem}
-        theme={theme}
-      /> */}
     </div>
   );
 }

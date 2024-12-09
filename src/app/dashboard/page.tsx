@@ -49,7 +49,7 @@ export default function Page() {
       <div className="flex h-screen">
         <AppSidebar onMenuSelect={(view) => setActiveView(view)} />
         <SidebarInset className="flex flex-1 flex-col overflow-hidden">
-          <header className="sticky top-0 z-10 flex h-12 items-center bg-gradient-to-r from-cyan-100 dark:from-cyan-600  dark:via-black dark:to-black dark:to-black  border-b via-white to-white px-4">
+          <header className="sticky top-0 z-10 flex h-12 items-center px-4">
             <div className="flex w-full items-center justify-between">
               <div className="flex items-center gap-2">
                 <SidebarTrigger className="-ml-1 dark:text-white text-black" />

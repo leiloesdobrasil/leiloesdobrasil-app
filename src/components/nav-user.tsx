@@ -1,14 +1,5 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react";
+import { BadgeCheck, ChevronsUpDown, CreditCard, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -26,19 +17,30 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; // Ensure this is from next/navigation
 import api from "@/services/api";
+
+interface User {
+  name: string;
+  email: string;
+  avatar: string;
+}
 
 export function NavUser() {
   const { isMobile } = useSidebar();
-  const { router } = useRouter();
+  const router = useRouter(); // Corrected usage of useRouter
 
-  const [user, setUser] = useState({ name: "", email: "", avatar: "" });
+  const [userData, setUserData] = useState<User>({
+    name: "",
+    email: "",
+    avatar: "",
+  });
+
   const [loading, setLoading] = useState(true);
 
   const logOut = () => {
     sessionStorage.removeItem("token");
-    router.push("/login"); // Redireciona para a página de login
+    router.push("/login");
   };
 
   useEffect(() => {
@@ -62,13 +64,13 @@ export function NavUser() {
         });
 
         const userData = response.data.data;
-        setUser({
-          name: userData.fullName, // Ajustando para fullName
+        setUserData({
+          name: userData.fullName,
           email: userData.email,
-          avatar: userData.avatar || "", // Garantindo um fallback para avatar
+          avatar: userData.avatar || "",
         });
       } catch (error) {
-        console.error("Erro ao buscar informações do usuário", error);
+        console.error("Error fetching user data", error);
       } finally {
         setLoading(false);
       }
@@ -78,7 +80,7 @@ export function NavUser() {
   }, []);
 
   if (loading) {
-    return <div>Carregando...</div>; // Exibe um estado de carregamento
+    return <div>Loading...</div>;
   }
 
   return (
@@ -91,14 +93,14 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage src={userData.avatar} alt={userData.name} />
                 <AvatarFallback className="rounded-lg">
-                  {user.name.slice(0, 2).toUpperCase() || "CN"}
+                  {userData.name.slice(0, 2).toUpperCase() || "CN"}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-semibold">{userData.name}</span>
+                <span className="truncate text-xs">{userData.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -112,14 +114,16 @@ export function NavUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarImage src={userData.avatar} alt={userData.name} />
                   <AvatarFallback className="rounded-lg">
-                    {user.name.slice(0, 2).toUpperCase() || "CN"}
+                    {userData.name.slice(0, 2).toUpperCase() || "CN"}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-semibold">
+                    {userData.name}
+                  </span>
+                  <span className="truncate text-xs">{userData.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -127,17 +131,17 @@ export function NavUser() {
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <BadgeCheck />
-                Minha Conta
+                My Account
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />
-                Detalhes do plano
+                Plan Details
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <LogOut />
-              <div onClick={logOut}>Sair</div>
+              <div onClick={logOut}>Log Out</div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

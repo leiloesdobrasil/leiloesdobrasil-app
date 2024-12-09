@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import CardAuction from "@/components/CardAuction";
 import PaginationControls from "@/components/PaginationControls";
 import api from "@/services/api";
@@ -11,13 +11,9 @@ export default function AuctionsPropertiesView() {
   const [auctions, setAuctions] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchAuctions(currentPage);
-  }, [currentPage]);
-
-  const fetchAuctions = async (page: number) => {
-    setLoading(true);
-    try {
+  const fetchAuctions = useCallback(
+    async (page: number) => {
+      setLoading(true);
       const token = sessionStorage.getItem("token");
 
       if (!token) {
@@ -26,33 +22,33 @@ export default function AuctionsPropertiesView() {
         return;
       }
 
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
+      try {
+        const response = await api.get("/auctions", {
+          params: { page },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      const response = await api.get("/auctions", {
-        params: { page },
-        ...config,
-      });
+        const { data, meta } = response.data;
+        setAuctions(data);
+        setTotalPages(Math.ceil(meta.total / meta.perPage));
+      } catch (error: unknown) {
+        console.error("Erro ao buscar leilões:", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [router]
+  );
 
-      setAuctions(response.data.data);
-      setTotalPages(
-        Math.ceil(response.data.meta.total / response.data.meta.perPage)
-      );
-    } catch (error: any) {
-      console.error(
-        "Erro ao buscar leilões:",
-        error.response?.data || error.message
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    fetchAuctions(currentPage);
+  }, [currentPage, fetchAuctions]);
 
   return (
     <>
+      {loading && <p>Loading...</p>}
       <CardAuction items={auctions} />
       <PaginationControls
         currentPage={currentPage}
