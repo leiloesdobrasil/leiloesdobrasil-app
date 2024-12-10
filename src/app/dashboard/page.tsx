@@ -48,7 +48,7 @@ export default function Page() {
     <SidebarProvider>
       <div className="flex h-screen">
         <AppSidebar onMenuSelect={(view) => setActiveView(view)} />
-        <SidebarInset className="flex flex-1 flex-col overflow-hidden">
+        <SidebarInset className="flex flex-1 flex-col overflow-hidden ">
           <header className="sticky top-0 z-10 flex h-12 items-center px-4">
             <div className="flex w-full items-center justify-between">
               <div className="flex items-center gap-2">

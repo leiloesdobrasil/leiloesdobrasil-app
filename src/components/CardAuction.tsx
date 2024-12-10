@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { Calendar } from "lucide-react";
 import { getBaseUrl } from "@/utils/helper";
+import Modal from "./Modal";
 
 interface ImovelPracas {
   originalPrice: number;
@@ -47,6 +48,8 @@ interface CardAuctionProps {
 export default function CardAuction({ items }: CardAuctionProps) {
   const [favoritedItems, setFavoritedItems] = useState<Set<number>>(new Set());
   const [hiddenItems, setHiddenItems] = useState<Set<number>>(new Set());
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<ImovelProps | null>(null);
 
   const formattedPrice = (value: number) =>
     Number(value).toLocaleString("pt-BR", {
@@ -142,6 +145,16 @@ export default function CardAuction({ items }: CardAuctionProps) {
       console.error("Erro ao atualizar visibilidade:", error);
       toast.error("Erro ao atualizar visibilidade!", toastConfig);
     }
+  };
+
+  const openModal = (item: ImovelProps) => {
+    setSelectedItem(item);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelectedItem(null);
   };
 
   const toastConfig: ToastOptions = {
@@ -355,6 +368,7 @@ export default function CardAuction({ items }: CardAuctionProps) {
                 <button
                   type="button"
                   className=" mr-4 more-info w-full bg-[#08A0A0] text-xs text-white font-bold py-2.5 px-4 rounded"
+                  onClick={() => openModal(item)}
                 >
                   Saiba Mais
                 </button>
@@ -371,6 +385,11 @@ export default function CardAuction({ items }: CardAuctionProps) {
       ) : (
         <></>
       )}
+      <Modal
+        open={modalOpen}
+        onClose={closeModal}
+        selectedItem={selectedItem}
+      />
     </div>
   );
 }
