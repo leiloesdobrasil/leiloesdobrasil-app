@@ -3,17 +3,14 @@ import Image from "next/image";
 import CardImage from "../assets/Leilao-online.jpg";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Tooltip } from "react-tooltip";
-import "react-tooltip/dist/react-tooltip.css";
 import { FaHeart, FaEye, FaEyeSlash } from "react-icons/fa";
 import { ToastContainer, toast, ToastOptions } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import Modal from "./Modal";
 import axios from "axios";
 import { Calendar } from "lucide-react";
 import { getBaseUrl } from "@/utils/helper";
 import Modal from "./Modal";
-
+import * as Tooltip from "@radix-ui/react-tooltip";
 interface ImovelPracas {
   originalPrice: number;
   inclusionDate: string;
@@ -26,7 +23,8 @@ interface ImovelProps {
   road: string;
   photos: string;
   originalPrice: number;
-  inclusionDate: string;
+  firstAuctionDate: string;
+  secondAuctionDate: string;
   discountedPrice: number;
   saleType: string;
   auctioneerLink: string;
@@ -176,8 +174,9 @@ export default function CardAuction({ items }: CardAuctionProps) {
     );
     setFavoritedItems(initialFavorites);
   }, [items]);
+
   return (
-    <div className="flex flex-wrap justify-center">
+    <div className="flex flex-wrap justify-center" id="root">
       <ToastContainer />
       {items && items.length > 0 ? (
         items.map((item, index) => {
@@ -190,18 +189,17 @@ export default function CardAuction({ items }: CardAuctionProps) {
           if (hiddenItems.has(index)) return null;
 
           const dataCadastroFormatada = format(
-            new Date(item.inclusionDate),
+            new Date(item.firstAuctionDate),
             "dd/MM/yyyy",
             { locale: ptBR }
           );
 
           const dataFimFormatada = format(
-            new Date(item.inclusionDate),
+            new Date(item.secondAuctionDate),
             "dd/MM/yyyy",
             { locale: ptBR }
           );
 
-          // Gerar um id único para cada card
           const tooltipId = `title-title-${index}`;
 
           const hasDiscount =
@@ -240,8 +238,12 @@ export default function CardAuction({ items }: CardAuctionProps) {
               >
                 <div className="relative mb-3">
                   <Image
-                    src={item.photos === "[]" ? CardImage : imageCard[0]}
-                    alt={item.title}
+                    src={
+                      item.photos && item.photos !== "[]"
+                        ? imageCard[0]
+                        : CardImage
+                    }
+                    alt={item.title || "Imagem do leilão"}
                     className="h-[200px] w-full object-cover border border-gray-300"
                     style={{
                       borderRadius: "6px",
@@ -272,12 +274,26 @@ export default function CardAuction({ items }: CardAuctionProps) {
                 </div>
 
                 <div>
-                  <h1
-                    id={tooltipId}
-                    className="Onest font-bold truncate cursor-pointer "
-                  >
-                    {item.title}
-                  </h1>
+                  <Tooltip.Provider>
+                    <Tooltip.Root>
+                      <Tooltip.Trigger asChild>
+                        <h1
+                          id={tooltipId}
+                          className="Onest font-bold truncate cursor-pointer"
+                        >
+                          {item.title}
+                        </h1>
+                      </Tooltip.Trigger>
+                      <Tooltip.Content
+                        side="top"
+                        sideOffset={5}
+                        className="bg-black text-white text-xs px-2 py-1 rounded shadow-md max-w-[200px] break-words"
+                      >
+                        {item.title}
+                        <Tooltip.Arrow className="fill-gray-800" />
+                      </Tooltip.Content>
+                    </Tooltip.Root>
+                  </Tooltip.Provider>
 
                   {/* Flags */}
                   {hasDiscount && (
@@ -301,12 +317,6 @@ export default function CardAuction({ items }: CardAuctionProps) {
                     </span>
                   )}
 
-                  <Tooltip
-                    anchorSelect={`#${tooltipId}`}
-                    place="top"
-                    content={item.title}
-                    className="tooltip-content font-geist-mono"
-                  />
                   <p
                     className={`text-xs dark:text-gray-400 text-gray-600 pointer truncate mb-2`}
                   >
@@ -330,34 +340,78 @@ export default function CardAuction({ items }: CardAuctionProps) {
                       </h1>
                     </div>
 
-                    <div className="flex">
-                      <div className="flex mb-2  space-x-8">
-                        <div className="flex items-center mb-5">
-                          <div>
-                            <div className="flex items-center dark:text-gray-400 text-gray-600">
-                              <Calendar className="w-4 h-4 mr-2 dark:text-gray-400 text-gray-600" />
-                              <div>
-                                <span className="text-xs block">1° leilão</span>
-                                <span className="text-sm">
-                                  {dataCadastroFormatada}
-                                </span>
+                    <div className="flex ">
+                      <div className="flex mb-2 space-x-8">
+                        {item.firstAuctionDate && !item.secondAuctionDate ? (
+                          // Caso 1: Apenas dataCadastroFormatada presente
+                          <div className="flex items-center mb-5">
+                            <div>
+                              <div className="flex items-center justify-center dark:text-gray-400 text-gray-600">
+                                <Calendar className="w-4 h-4 mr-2 dark:text-gray-400 text-gray-600" />
+                                <div>
+                                  <span className="text-xs block">
+                                    Venda Direta
+                                  </span>
+                                  <span className="text-sm">
+                                    {dataCadastroFormatada}
+                                  </span>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="flex items-center mb-5">
-                          <div>
-                            <div className="flex items-center dark:text-gray-400 text-gray-600">
-                              <Calendar className="w-4 h-4 mr-2 dark:text-gray-400 text-gray-600" />
-                              <div>
-                                <span className="text-xs block">2° leilão</span>
-                                <span className="text-sm">
-                                  {dataFimFormatada}
-                                </span>
+                        ) : !item.firstAuctionDate &&
+                          !item.secondAuctionDate ? (
+                          // Caso 2: Nenhuma data presente
+                          <div className="flex items-center mb-5">
+                            <div>
+                              <div className="flex items-center dark:text-gray-400 text-gray-600">
+                                <Calendar className="w-4 h-4 mr-2 dark:text-gray-400 text-gray-600" />
+                                <div>
+                                  <span className="text-sm block">
+                                    Sem data informada
+                                  </span>
+                                  <span className="text-xs">
+                                    Checar no site do leiloeiro
+                                  </span>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
+                        ) : (
+                          // Caso 3: Ambas as datas presentes
+                          <>
+                            <div className="flex items-center mb-5">
+                              <div>
+                                <div className="flex items-center dark:text-gray-400 text-gray-600">
+                                  <Calendar className="w-4 h-4 mr-2 dark:text-gray-400 text-gray-600" />
+                                  <div>
+                                    <span className="text-xs block">
+                                      1° leilão
+                                    </span>
+                                    <span className="text-sm">
+                                      {dataCadastroFormatada}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center mb-5">
+                              <div>
+                                <div className="flex items-center dark:text-gray-400 text-gray-600">
+                                  <Calendar className="w-4 h-4 mr-2 dark:text-gray-400 text-gray-600" />
+                                  <div>
+                                    <span className="text-xs block">
+                                      2° leilão
+                                    </span>
+                                    <span className="text-sm">
+                                      {dataFimFormatada}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 interface PaginationControlsProps {
   currentPage: number;
@@ -28,9 +28,14 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
 
   const visiblePages = getVisiblePages();
 
+  // Usando useEffect para rolar ao topo quando a página mudar
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage]); // Quando currentPage mudar, o scroll será acionado
+
   return (
     <nav
-      aria-label="Page navigation example "
+      aria-label="Page navigation example"
       className="mt-4 w-full flex justify-center align-center items-center"
     >
       <ul className="flex items-center -space-x-px h-10 text-base">

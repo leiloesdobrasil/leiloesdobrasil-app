@@ -8,6 +8,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getBaseUrl } from "../../utils/helper";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import Image from "next/image";
+import { useTheme } from "next-themes";
+import LogoLight from "../../assets/logolight.svg";
+import LogoDark from "../../assets/logodark.svg";
 
 export default function Signin() {
   const [postalCode, setPostalCode] = useState("");
@@ -98,6 +102,8 @@ export default function Signin() {
     }
   };
 
+  const { theme } = useTheme();
+  const currentTheme = theme === "dark" ? "dark" : "light";
   return (
     <div className="min-h-screen flex">
       <ToastContainer
@@ -319,9 +325,17 @@ export default function Signin() {
           </div>
         </div>
       </ScrollArea>
-      <div className="w-1/2 bg-[#08A0A0] text-white p-12 flex flex-col justify-between rounded-md m-4">
+      <div className="w-1/2 bg-[#005252] text-white p-12 flex flex-col justify-between rounded-md m-4">
         <div>
-          <h1 className="text-4xl font-bold mt-2">Leilões do Brasil</h1>
+          <Image
+            src={currentTheme === "dark" ? LogoLight : LogoDark}
+            alt={"logo"}
+            className=" max-w-[500px] object-cover"
+            style={{
+              borderRadius: "6px",
+            }}
+            width={300}
+          />
         </div>
         <div>
           <p className="text-lg italic">

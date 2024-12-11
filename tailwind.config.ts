@@ -7,6 +7,9 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  backgroundImage: {
+    "logo-texture": "url('/src/assets/iconlogo.svg')",
+  },
   theme: {
     extend: {
       colors: {

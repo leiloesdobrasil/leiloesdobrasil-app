@@ -3,6 +3,8 @@ import CardAuction from "@/components/CardAuction";
 import PaginationControls from "@/components/PaginationControls";
 import api from "@/services/api";
 import { useRouter } from "next/navigation";
+import CardAuctionFilter from "../../components/CardAuctionFilter";
+import { SkeletonCard } from "../../components/SkeletonCard";
 
 export default function AuctionsPropertiesView() {
   const router = useRouter();
@@ -48,8 +50,16 @@ export default function AuctionsPropertiesView() {
 
   return (
     <>
-      {loading && <p>Loading...</p>}
-      <CardAuction items={auctions} />
+      <CardAuctionFilter />
+      {loading ? (
+        <div className="flex flex-wrap justify-center">
+          {Array.from({ length: 10 }).map((_, index) => (
+            <SkeletonCard key={index} />
+          ))}
+        </div>
+      ) : (
+        <CardAuction items={auctions} />
+      )}
       <PaginationControls
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}

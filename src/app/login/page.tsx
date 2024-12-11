@@ -3,8 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
+import LogoLight from "../../assets/logolight.svg";
+import LogoDark from "../../assets/logodark.svg";
 import "react-toastify/dist/ReactToastify.css";
 import { getBaseUrl } from "@/utils/helper";
+import { useTheme } from "next-themes";
+import Image from "next/image";
 
 interface LoginForm {
   email: string;
@@ -13,6 +17,9 @@ interface LoginForm {
 }
 
 export default function Login() {
+  const { theme } = useTheme();
+  const currentTheme = theme === "dark" ? "dark" : "light";
+
   const [formData, setFormData] = useState<LoginForm>({
     email: "",
     password: "",
@@ -202,9 +209,17 @@ export default function Login() {
           </div>
         </div>
       </div>
-      <div className="w-1/2 bg-[#08A0A0] text-white p-12 flex flex-col justify-between rounded-md m-4">
+      <div className="w-1/2 bg-[#005252] text-white p-12 flex flex-col justify-between rounded-md m-4">
         <div>
-          <h1 className="text-4xl font-bold mt-2">Leilões do Brasil</h1>
+          <Image
+            src={currentTheme === "dark" ? LogoLight : LogoDark}
+            alt={"logo"}
+            className=" max-w-[500px] object-cover"
+            style={{
+              borderRadius: "6px",
+            }}
+            width={300}
+          />
         </div>
         <div>
           <p className="text-lg italic">

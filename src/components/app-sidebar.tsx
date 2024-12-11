@@ -4,7 +4,6 @@ import * as React from "react";
 import {
   Activity,
   Car,
-  Command,
   Home,
   LifeBuoy,
   Radar,
@@ -13,6 +12,9 @@ import {
   Tractor,
   ChartArea,
 } from "lucide-react";
+
+import LogoLight from "../assets/logolight.svg";
+import LogoDark from "../assets/logodark.svg";
 
 import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
@@ -27,6 +29,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import Image from "next/image";
+import { useTheme } from "next-themes";
 
 const data = {
   user: {
@@ -124,23 +128,25 @@ export function AppSidebar({
 }: React.ComponentProps<typeof Sidebar> & {
   onMenuSelect: (view: string) => void;
 }) {
+  const { theme } = useTheme();
+  const currentTheme = theme === "dark" ? "dark" : "light";
+
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-[#08A0A0] text-sidebar-primary-foreground">
-                  <Command className="size-4" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">
-                    Leiloes do Brasil
-                  </span>
-                  <span className="truncate text-xs">LTDA</span>
-                </div>
-              </a>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <Image
+                  src={currentTheme === "dark" ? LogoLight : LogoDark}
+                  alt={"logo"}
+                  className=" w-full object-cover"
+                  style={{
+                    borderRadius: "6px",
+                  }}
+                />
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

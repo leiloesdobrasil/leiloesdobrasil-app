@@ -1,9 +1,16 @@
+"use client";
+
 import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import ImageHome from "../assets/brazil.svg";
+import ImageHome from "../assets/gavel-icon-18657.svg";
 import ImageAboutUs from "../assets/aboutus.svg";
 import { Badge } from "@/components/ui/badge";
+import { MouseEvent } from "react";
+import LogoLight from "../assets/logolight.svg";
+import LogoDark from "../assets/logodark.svg";
+import IconLogo from "../assets/iconlogo.svg";
+
 import {
   Card,
   CardContent,
@@ -14,6 +21,7 @@ import {
 } from "@/components/ui/card";
 import { Check } from "lucide-react";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 
 export default function Home() {
   enum PopularPlanType {
@@ -29,6 +37,18 @@ export default function Home() {
     buttonText: string;
     benefitList: string[];
   }
+
+  const handleSmoothScroll = (e: MouseEvent, targetId: string) => {
+    e.preventDefault();
+
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+      targetElement.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
 
   const pricingList: PricingProps[] = [
     {
@@ -78,29 +98,62 @@ export default function Home() {
     },
   ];
 
+  const { theme } = useTheme();
+  const currentTheme = theme === "dark" ? "dark" : "light";
+
   return (
-    <div className="dark:bg-[#17181c]">
-      <header className="p-3 border-b w-full flex align-center justify-center ">
+    <div className="dark:bg-[#17181c] ">
+      <header className="p-2 border-b w-full flex align-center justify-center ">
         <div className="container flex items-center justify-between">
           <div className="logo flex items-center space-x-3">
-            <h1 className="text-xl font-semibold">Leilões do Brasil</h1>
+            <Image
+              src={currentTheme === "dark" ? LogoLight : LogoDark}
+              alt={"logo"}
+              className=" object-cover"
+              style={{
+                borderRadius: "6px",
+              }}
+              width={240}
+            />
           </div>
 
           <div className="links flex space-x-6">
             <Button variant="link" className="text-medium hover:text-[#08A0A0]">
-              Sobre Nos
+              <a
+                href="#aboutus"
+                onClick={(e) => handleSmoothScroll(e, "aboutus")}
+              >
+                Sobre Nos
+              </a>
             </Button>
             <Button variant="link" className="text-medium hover:text-[#08A0A0]">
-              Estatisticas
+              <a
+                href="#statistics"
+                onClick={(e) => handleSmoothScroll(e, "statistics")}
+              >
+                Estatisticas
+              </a>
             </Button>
             <Button variant="link" className="text-medium hover:text-[#08A0A0]">
-              Sobre o Produto
+              <a
+                href="#aboutproduct"
+                onClick={(e) => handleSmoothScroll(e, "aboutproduct")}
+              >
+                Sobre o Produto
+              </a>
             </Button>
             <Button variant="link" className="text-medium hover:text-[#08A0A0]">
-              Valores
+              <a
+                href="#pricing"
+                onClick={(e) => handleSmoothScroll(e, "pricing")}
+              >
+                Preco
+              </a>
             </Button>
             <Button variant="link" className="text-medium hover:text-[#08A0A0]">
-              Perguntas Frequentes
+              <a href="#faq" onClick={(e) => handleSmoothScroll(e, "faq")}>
+                Perguntas Frequentes
+              </a>
             </Button>
           </div>
           <div className="auth-mode-toggle flex items-center space-x-4">
@@ -115,86 +168,114 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="flex flex-col items-center align-center justify-center md:flex-row">
+      {/* Background */}
+      {/* <div className="absolute inset-0 bg-logo-texture bg-repeat bg-gray-900 filter grayscale opacity-10 z-0"></div> */}
+
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-end justify-center md:flex-row">
         <div className="w-full px-3 md:w-1/2">
           <div className="aboutus flex justify-center mt-[150px] mb-[150px]">
             <div className="w-full pb-6 space-y-6 sm:max-w-md lg:max-w-lg md:space-y-4 lg:space-y-8 xl:space-y-9 sm:pr-5 lg:pr-0 md:pb-0 text-center md:text-left">
+              <div className="logo flex items-center space-x-3">
+                <Image
+                  src={IconLogo}
+                  alt={"logo"}
+                  className=" object-cover"
+                  style={{
+                    borderRadius: "6px",
+                  }}
+                  width={90}
+                />
+              </div>
               <h1
                 className={
-                  "text-4xl font-extrabold tracking-tight sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl dark:text-white text-gray-900"
+                  " font-bold tracking-tight sm:text-3xl  dark:text-white text-gray-900"
                 }
               >
-                <span className="block xl:inline">Uma maneira nova </span>
-                <span className="block text-[#08A0A0] xl:inline">
-                  de buscar leilões online.
+                <span className="block xl:inline">
+                  Lugar ideal para aproveitar
                 </span>
+                <span className="block ">o melhor leilão</span>
               </h1>
-              <p className="mx-auto text-base text-gray-500 sm:max-w-md lg:text-xl md:max-w-3xl">
+              <p
+                id="aboutus"
+                className="text-base  sm:max-w-md lg:text-medium md:max-w-3xl"
+              >
                 Descubra o portal definitivo para encontrar leilões online em
                 todo o Brasil com facilidade e rapidez. Não perca mais tempo
                 procurando, encontre os melhores leilões agora mesmo!
               </p>
               <div className="relative flex flex-col sm:flex-row sm:space-x-4 justify-center md:justify-start">
-                <Button>Comprar licença</Button>
-                <Button variant={"secondary"}>Saiba mais</Button>
+                <Button onClick={(e) => handleSmoothScroll(e, "pricing")}>
+                  Comprar licença
+                </Button>
+                <Button
+                  onClick={(e) => handleSmoothScroll(e, "aboutproduct")}
+                  variant={"secondary"}
+                >
+                  Saiba mais
+                </Button>
               </div>
             </div>
           </div>
         </div>
-        <div className="hidden md:block w-1/3">
-          <div className="w-full max-w-[500px] h-auto overflow-hidden ">
+        <div className="hidden md:block w-1/3 relative group">
+          {/* Contêiner para a sombra */}
+          <div className="w-full max-w-[500px] h-auto overflow-hidden relative">
+            {/* Imagem */}
             <Image
               src={ImageHome}
               alt="Online Auction"
               layout="responsive"
-              width={700}
-              height={475}
+              width={6000}
+              height={5475}
+              className="z-10"
             />
           </div>
         </div>
       </div>
-      <div className="bg-[#08A0A0] py-24 sm:py-32 mb-[8rem] mt-[2rem]">
+      <div
+        className="dark:bg-[#1e1f23] bg-[#f4f4f5] py-24 sm:py-32 mb-[8rem] mt-[2rem] "
+        id="statistics"
+      >
+        <div className="flex flex-wrap "></div>
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:max-w-none">
             <div className="text-center space-y-4">
-              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
                 Nossas estatísticas não mentem!
               </h2>
-              <p className="text-lg leading-8 text-gray-300">
+              <p className="text-lg leading-8 ">
                 Os números refletem a verdade: desempenho comprovado e
                 resultados concretos.
               </p>
             </div>
             <dl className="mt-16 grid grid-cols-1 gap-0.5 overflow-hidden rounded-2xl text-center sm:grid-cols-2 lg:grid-cols-4">
-              <div className="flex flex-col bg-white/5 p-8">
-                <dt className="text-sm font-semibold leading-6 text-gray-300">
+              <div className="flex flex-col bg-white/5 p-8 ">
+                <dt className="text-sm font-semibold leading-6 z-100 ">
                   Imóveis
                 </dt>
-                <dd className="order-first text-3xl font-semibold tracking-tight text-white">
+                <dd className="order-first text-3xl font-semibold tracking-tight">
                   X
                 </dd>
               </div>
               <div className="flex flex-col bg-white/5 p-8">
-                <dt className="text-sm font-semibold leading-6 text-gray-300">
-                  Veículos
-                </dt>
-                <dd className="order-first text-3xl font-semibold tracking-tight text-white">
+                <dt className="text-sm font-semibold leading-6 ">Veículos</dt>
+                <dd className="order-first text-3xl font-semibold tracking-tight">
                   X
                 </dd>
               </div>
               <div className="flex flex-col bg-white/5 p-8">
-                <dt className="text-sm font-semibold leading-6 text-gray-300">
-                  Leiloeiros
-                </dt>
-                <dd className="order-first text-3xl font-semibold tracking-tight text-white">
+                <dt className="text-sm font-semibold leading-6 ">Leiloeiros</dt>
+                <dd className="order-first text-3xl font-semibold tracking-tight">
                   920
                 </dd>
               </div>
               <div className="flex flex-col bg-white/5 p-8">
-                <dt className="text-sm font-semibold leading-6 text-gray-300">
+                <dt className="text-sm font-semibold leading-6 ">
                   De todos os leilões do brasil
                 </dt>
-                <dd className="order-first text-3xl font-semibold tracking-tight text-white">
+                <dd className="order-first text-3xl font-semibold tracking-tight">
                   90%
                 </dd>
               </div>
@@ -209,6 +290,7 @@ export default function Home() {
         <div className="sm:w-1/2 p-10">
           <div className="image object-center text-center">
             <Image
+              id="aboutproduct"
               src={ImageAboutUs}
               alt="Online Auction"
               layout="responsive"
@@ -230,7 +312,7 @@ export default function Home() {
               Todos os Leilões em um{" "}
               <span className="text-[#08A0A0]">Só Lugar</span>
             </h2>
-            <p className={" text-justify text-gray-500"}>
+            <p className={" text-justify "}>
               Encontre imóveis, veículos, máquinas, equipamentos e diversos
               outros bens na maior lista de leilões do Brasil! Com nossa
               plataforma, você tem acesso a uma análise simultânea de mais de
@@ -253,19 +335,20 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="pricing flex justify-center bg-[#08A0A0]">
+      <div className="pricing flex justify-center dark:bg-[#1e1f23] bg-[#f4f4f5]">
         <section id="pricing" className="container py-24 sm:py-32">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-white ">
+          <h2 className="text-3xl md:text-4xl font-bold text-center ">
             Obtenha
             <span className=""> Acesso </span>
           </h2>
-          <h3 className="text-xl text-center text-muted-foreground pt-4 pb-8 text-white ">
+          <h3 className="text-xl text-center text-muted-foreground pt-4 pb-8 ">
             Nossos planos sao personalizados para todos os tipos de leiloeiros
             do Brasil.
           </h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {pricingList.map((pricing: PricingProps) => (
               <Card
+                id="pricing"
                 key={pricing.title}
                 className={
                   pricing.popular === PopularPlanType.YES
@@ -316,16 +399,14 @@ export default function Home() {
       </div>
       <div className="py-4 max-w-screen-sm mx-auto">
         <div className="text-center mb-16">
-          <p className="mt-4 text-sm leading-7 text-gray-500 font-regular">
-            F.A.Q
-          </p>
+          <p className="mt-4 text-sm leading-7  font-regular">F.A.Q</p>
           <h3 className="text-3xl sm:text-4xl leading-normal font-extrabold tracking-tight ">
             <span className="text-[#08A0A0]">Perguntas </span>Frequentes
           </h3>
         </div>
 
         <div className="px-10 sm:px-16">
-          <div className="py-3 uppercase text-sm text-gray-500 font-medium">
+          <div id="faq" className="py-3 uppercase text-sm  font-medium">
             Algumas respostas podem estar aqui!
           </div>
 
@@ -357,7 +438,7 @@ export default function Home() {
                 <h1 className="text-[#08A0A0] font-semibold mb-2">
                   Eu dou o lance no site leilões do brasil?
                 </h1>
-                <p className="text-gray-500 text-sm text-justify">
+                <p className=" text-sm text-justify">
                   Não. O site Leilões do Brasil apenas é um buscador que
                   centraliza todas essas oportunidades em um só lugar,
                   facilitando sua pesquisa. Quando você encontra o bem de
@@ -394,7 +475,7 @@ export default function Home() {
                 <h1 className="text-[#08A0A0] font-semibold mb-2">
                   O Leilões do Brasil é um site de leilão?
                 </h1>
-                <p className="text-gray-500 text-sm text-justify">
+                <p className=" text-sm text-justify">
                   Não! Somos uma plataforma agregadora dos bens de leilão,
                   direcionando você para o site do leiloeiro que fará o leilão.
                 </p>
@@ -427,7 +508,7 @@ export default function Home() {
                 <h1 className="text-[#08A0A0] font-semibold mb-2">
                   Por que assinar o Leilões do Brasil?
                 </h1>
-                <p className="text-gray-500 text-sm text-justify">
+                <p className=" text-sm text-justify">
                   Atualmente temos o maior banco de dados de leilões do Brasil,
                   sendo atualizada diariamente com novos leilões. Oferecemos
                   segurança na escolha de dos leilões, além de oferecer
@@ -463,7 +544,7 @@ export default function Home() {
                   Todos os bens que estão cadastrados no Leilão do Brasil, são
                   de leiloeiros oficiais?
                 </h1>
-                <p className="text-gray-500 text-sm text-justify">
+                <p className=" text-sm text-justify">
                   Sim, Todos os sites de leilão e leiloeiros são verificados
                   antes de entrar em nossa lista e cadastrar em nosso banco de
                   dados. Pode ter certeza que se está em nosso site, é de
@@ -499,7 +580,7 @@ export default function Home() {
                   Tenho que pagar para utilizar a plataforma do Leilões do
                   Brasil?
                 </h1>
-                <p className="text-gray-500 text-sm text-justify">
+                <p className=" text-sm text-justify">
                   Sim. Você pode escolher pagar semestralmente ou anualmente
                   nossa plataforma. Você será de um grupo seleto de arrematantes
                   que com privilégio de saber onde acontecerão os melhores bens
