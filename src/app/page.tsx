@@ -22,6 +22,7 @@ import {
 import { Check } from "lucide-react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
+import Header from "@/components/Header";
 
 export default function Home() {
   enum PopularPlanType {
@@ -98,12 +99,10 @@ export default function Home() {
     },
   ];
 
-  const { theme } = useTheme();
-  const currentTheme = theme === "dark" ? "dark" : "light";
-
   return (
     <div className="dark:bg-[#17181c] ">
-      <header className="p-2 border-b w-full flex align-center justify-center ">
+      <Header />
+      {/* <header className="p-2 border-b w-full flex align-center justify-center ">
         <div className="container flex items-center justify-between">
           <div className="logo flex items-center space-x-3">
             <Image
@@ -166,13 +165,9 @@ export default function Home() {
             <ModeToggle />
           </div>
         </div>
-      </header>
+      </header> */}
 
-      {/* Background */}
-      {/* <div className="absolute inset-0 bg-logo-texture bg-repeat bg-gray-900 filter grayscale opacity-10 z-0"></div> */}
-
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-end justify-center md:flex-row">
+      <div className="flex flex-col items-center align-center justify-center md:flex-row">
         <div className="w-full px-3 md:w-1/2">
           <div className="aboutus flex justify-center mt-[150px] mb-[150px]">
             <div className="w-full pb-6 space-y-6 sm:max-w-md lg:max-w-lg md:space-y-4 lg:space-y-8 xl:space-y-9 sm:pr-5 lg:pr-0 md:pb-0 text-center md:text-left">

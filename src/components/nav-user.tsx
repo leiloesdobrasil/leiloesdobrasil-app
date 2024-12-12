@@ -131,17 +131,17 @@ export function NavUser() {
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <BadgeCheck />
-                My Account
+                Mudar dados da conta
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />
-                Plan Details
+                Detalhes do meu plano
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <LogOut />
-              <div onClick={logOut}>Log Out</div>
+              <div onClick={logOut}>Sair</div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

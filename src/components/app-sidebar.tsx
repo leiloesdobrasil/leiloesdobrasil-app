@@ -1,24 +1,13 @@
 "use client";
 
 import * as React from "react";
-import {
-  Activity,
-  Car,
-  Home,
-  LifeBuoy,
-  Radar,
-  Send,
-  Settings2,
-  Tractor,
-  ChartArea,
-} from "lucide-react";
+import { Activity, Car, Home, Radar, Tractor, ChartArea } from "lucide-react";
 
 import LogoLight from "../assets/logolight.svg";
 import LogoDark from "../assets/logodark.svg";
 
 import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
-import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
@@ -59,6 +48,8 @@ const data = {
       title: "Imoveis",
       url: "#",
       icon: Home,
+      isActive: true,
+
       items: [
         {
           title: "Todos os Imóveis",
@@ -79,33 +70,6 @@ const data = {
       title: "Maquinas",
       url: "#",
       icon: Tractor,
-    },
-    {
-      title: "Configuracoes",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "Informacoes da conta",
-          url: "#",
-        },
-        {
-          title: "Pagamentos",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: Send,
     },
   ],
   projects: [
@@ -163,13 +127,6 @@ export function AppSidebar({
             ...project,
             onClick: () => onMenuSelect(project.name),
           }))}
-        />
-        <NavSecondary
-          items={data.navSecondary.map((item) => ({
-            ...item,
-            onClick: () => onMenuSelect(item.title),
-          }))}
-          className="mt-auto"
         />
       </SidebarContent>
       <SidebarFooter>

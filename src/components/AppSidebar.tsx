@@ -6,9 +6,7 @@ import {
   Car,
   Command,
   Home,
-  LifeBuoy,
   Radar,
-  Send,
   Settings2,
   Tractor,
   ChartArea,
@@ -16,7 +14,6 @@ import {
 
 import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
-import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
@@ -92,18 +89,7 @@ const data = {
       ],
     },
   ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: Send,
-    },
-  ],
+
   projects: [
     {
       name: "Analytics",
@@ -165,13 +151,6 @@ export function AppSidebar({
             ...project,
             onClick: () => handleMenuItemClick(project.name),
           }))}
-        />
-        <NavSecondary
-          items={data.navSecondary.map((item) => ({
-            ...item,
-            onClick: () => handleMenuItemClick(item.title),
-          }))}
-          className="mt-auto"
         />
       </SidebarContent>
       <SidebarFooter>

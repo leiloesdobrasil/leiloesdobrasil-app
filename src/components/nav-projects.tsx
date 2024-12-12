@@ -81,12 +81,7 @@ export function NavProjects({
             )}
           </SidebarMenuItem>
         ))}
-        <SidebarMenuItem>
-          <SidebarMenuButton>
-            <MoreHorizontal />
-            <span>More</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
+        <SidebarMenuItem></SidebarMenuItem>
       </SidebarMenu>
     </SidebarGroup>
   );
