@@ -14,6 +14,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { FieldsFilterProperties } from "./FieldsFIlterProperties";
 
 export function FilterButtonProperties() {
   return (
@@ -33,11 +34,11 @@ export function FilterButtonProperties() {
           </DrawerHeader>
           <div className="p-4 pb-0">
             <div className="flex items-center justify-center space-x-2">
-              <div className="flex-1 text-center"></div>
+              <FieldsFilterProperties />
             </div>
           </div>
-          <DrawerFooter>
-            <Button>Aplicar</Button>
+
+          <DrawerFooter className="flex justify-end">
             <DrawerClose asChild>
               <Button variant="outline">Cancelar</Button>
             </DrawerClose>

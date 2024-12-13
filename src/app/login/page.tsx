@@ -209,7 +209,7 @@ export default function Login() {
           </div>
         </div>
       </div>
-      <div className="w-1/2 bg-[#005252] text-white p-12 flex flex-col justify-between rounded-md m-4">
+      <div className="w-1/2 dark:bg-[#17181c] bg-[#f4f4f5] text-white p-12 flex flex-col justify-between rounded-md m-4">
         <div>
           <Image
             src={currentTheme === "dark" ? LogoLight : LogoDark}
@@ -222,7 +222,7 @@ export default function Login() {
           />
         </div>
         <div>
-          <p className="text-lg italic">
+          <p className="text-lg italic dark:text-white text-black">
             Este portal foi cuidadosamente desenvolvido para simplificar e
             automatizar o trabalho dos leiloeiros em todo o Brasil
           </p>

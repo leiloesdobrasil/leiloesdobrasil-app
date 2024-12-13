@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -6,6 +10,24 @@ import { OrderByFilter } from "./OrderByFilter";
 import { FilterButtonProperties } from "./FilterButtonProperties";
 
 function CardAuctionFilter() {
+  const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const pathName = usePathname();
+  const { replace } = useRouter();
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const params = new URLSearchParams();
+    const keyword = e.currentTarget.value;
+    setSearchKeyword(keyword);
+
+    if (keyword) {
+      params.set("keyword", keyword);
+    } else {
+      params.delete("keyword");
+    }
+
+    replace(`${pathName}?${params.toString()}`);
+  };
+
   return (
     <div className="flex items-center justify-between w-full p-2">
       <div className="flex items-center">
@@ -16,6 +38,8 @@ function CardAuctionFilter() {
               className="pl-10"
               type="text"
               placeholder="O que você está procurando?"
+              value={searchKeyword}
+              onChange={handleSearch}
             />
           </div>
           <FilterButtonProperties />

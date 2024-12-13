@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 interface PaginationControlsProps {
   currentPage: number;
@@ -27,11 +27,6 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
   };
 
   const visiblePages = getVisiblePages();
-
-  // Usando useEffect para rolar ao topo quando a página mudar
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [currentPage]); // Quando currentPage mudar, o scroll será acionado
 
   return (
     <nav

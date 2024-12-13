@@ -1,6 +1,5 @@
 "use client";
 
-import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import ImageHome from "../assets/gavel-icon-18657.svg";
@@ -9,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { MouseEvent } from "react";
 import LogoLight from "../assets/logolight.svg";
 import LogoDark from "../assets/logodark.svg";
-import IconLogo from "../assets/iconlogo.svg";
 
 import {
   Card,
@@ -20,11 +18,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Check } from "lucide-react";
-import Link from "next/link";
 import { useTheme } from "next-themes";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export default function Home() {
+  const { theme } = useTheme();
+  const currentTheme = theme === "dark" ? "dark" : "light";
+
   enum PopularPlanType {
     NO = 0,
     YES = 1,
@@ -102,70 +103,6 @@ export default function Home() {
   return (
     <div className="dark:bg-[#17181c] ">
       <Header />
-      {/* <header className="p-2 border-b w-full flex align-center justify-center ">
-        <div className="container flex items-center justify-between">
-          <div className="logo flex items-center space-x-3">
-            <Image
-              src={currentTheme === "dark" ? LogoLight : LogoDark}
-              alt={"logo"}
-              className=" object-cover"
-              style={{
-                borderRadius: "6px",
-              }}
-              width={240}
-            />
-          </div>
-
-          <div className="links flex space-x-6">
-            <Button variant="link" className="text-medium hover:text-[#08A0A0]">
-              <a
-                href="#aboutus"
-                onClick={(e) => handleSmoothScroll(e, "aboutus")}
-              >
-                Sobre Nos
-              </a>
-            </Button>
-            <Button variant="link" className="text-medium hover:text-[#08A0A0]">
-              <a
-                href="#statistics"
-                onClick={(e) => handleSmoothScroll(e, "statistics")}
-              >
-                Estatisticas
-              </a>
-            </Button>
-            <Button variant="link" className="text-medium hover:text-[#08A0A0]">
-              <a
-                href="#aboutproduct"
-                onClick={(e) => handleSmoothScroll(e, "aboutproduct")}
-              >
-                Sobre o Produto
-              </a>
-            </Button>
-            <Button variant="link" className="text-medium hover:text-[#08A0A0]">
-              <a
-                href="#pricing"
-                onClick={(e) => handleSmoothScroll(e, "pricing")}
-              >
-                Preco
-              </a>
-            </Button>
-            <Button variant="link" className="text-medium hover:text-[#08A0A0]">
-              <a href="#faq" onClick={(e) => handleSmoothScroll(e, "faq")}>
-                Perguntas Frequentes
-              </a>
-            </Button>
-          </div>
-          <div className="auth-mode-toggle flex items-center space-x-4">
-            <Link href="/login">
-              <Button>Login</Button>
-            </Link>
-            <Link href="/signin">
-              <Button variant="secondary">Cadastre-se</Button>
-            </Link>
-            <ModeToggle />
-          </div>
-        </div>
-      </header> */}
 
       <div className="flex flex-col items-center align-center justify-center md:flex-row">
         <div className="w-full px-3 md:w-1/2">
@@ -173,13 +110,11 @@ export default function Home() {
             <div className="w-full pb-6 space-y-6 sm:max-w-md lg:max-w-lg md:space-y-4 lg:space-y-8 xl:space-y-9 sm:pr-5 lg:pr-0 md:pb-0 text-center md:text-left">
               <div className="logo flex items-center space-x-3">
                 <Image
-                  src={IconLogo}
-                  alt={"logo"}
-                  className=" object-cover"
-                  style={{
-                    borderRadius: "6px",
-                  }}
-                  width={90}
+                  src={currentTheme === "dark" ? LogoLight : LogoDark}
+                  alt="logo"
+                  className="rounded-md"
+                  width={200}
+                  height={50}
                 />
               </div>
               <h1
@@ -201,7 +136,10 @@ export default function Home() {
                 procurando, encontre os melhores leilões agora mesmo!
               </p>
               <div className="relative flex flex-col sm:flex-row sm:space-x-4 justify-center md:justify-start">
-                <Button onClick={(e) => handleSmoothScroll(e, "pricing")}>
+                <Button
+                  className="text-white bg-teal-600 hover:bg-teal-700"
+                  onClick={(e) => handleSmoothScroll(e, "pricing")}
+                >
                   Comprar licença
                 </Button>
                 <Button
@@ -216,7 +154,7 @@ export default function Home() {
         </div>
         <div className="hidden md:block w-1/3 relative group">
           {/* Contêiner para a sombra */}
-          <div className="w-full max-w-[500px] h-auto overflow-hidden relative">
+          <div className="w-full max-w-[400px] h-auto overflow-hidden relative">
             {/* Imagem */}
             <Image
               src={ImageHome}
@@ -233,46 +171,52 @@ export default function Home() {
         className="dark:bg-[#1e1f23] bg-[#f4f4f5] py-24 sm:py-32 mb-[8rem] mt-[2rem] "
         id="statistics"
       >
-        <div className="flex flex-wrap "></div>
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:max-w-none">
-            <div className="text-center space-y-4">
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                Nossas estatísticas não mentem!
+            <div className="text-center space-y-6">
+              <h2 className="font-bold tracking-tight sm:text-3xl  dark:text-white text-gray-900">
+                Dados que comprovam nosso sucesso
               </h2>
-              <p className="text-lg leading-8 ">
-                Os números refletem a verdade: desempenho comprovado e
-                resultados concretos.
+              <p className="text-base leading-8 ">
+                Resultados sólidos e confiáveis que destacam nosso desempenho
+                excepcional no mercado.
               </p>
             </div>
-            <dl className="mt-16 grid grid-cols-1 gap-0.5 overflow-hidden rounded-2xl text-center sm:grid-cols-2 lg:grid-cols-4">
-              <div className="flex flex-col bg-white/5 p-8 ">
-                <dt className="text-sm font-semibold leading-6 z-100 ">
+
+            <dl className="mt-16 grid grid-cols-1 gap-6 overflow-hidden rounded-2xl text-center sm:grid-cols-2 lg:grid-cols-4">
+              <div className="flex flex-col bg-gray-200 dark:bg-[#17181c] p-8 shadow-lg rounded-xl">
+                <dd className="order-first text-4xl font-extrabold tracking-tight text-teal-600 dark:text-teal-400">
+                  x
+                </dd>
+                <dt className="text-sm font-medium leading-6 text-gray-700 dark:text-gray-200">
                   Imóveis
                 </dt>
-                <dd className="order-first text-3xl font-semibold tracking-tight">
-                  X
-                </dd>
               </div>
-              <div className="flex flex-col bg-white/5 p-8">
-                <dt className="text-sm font-semibold leading-6 ">Veículos</dt>
-                <dd className="order-first text-3xl font-semibold tracking-tight">
-                  X
+              <div className="flex flex-col bg-gray-200 dark:bg-[#17181c] p-8 shadow-lg rounded-xl">
+                <dd className="order-first text-4xl font-extrabold tracking-tight text-teal-600 dark:text-teal-400">
+                  x
                 </dd>
+                <dt className="text-sm font-medium leading-6 text-gray-700 dark:text-gray-200">
+                  Veículos
+                </dt>
               </div>
-              <div className="flex flex-col bg-white/5 p-8">
-                <dt className="text-sm font-semibold leading-6 ">Leiloeiros</dt>
-                <dd className="order-first text-3xl font-semibold tracking-tight">
+
+              <div className="flex flex-col bg-gray-200 dark:bg-[#17181c] p-8 shadow-lg rounded-xl">
+                <dd className="order-first text-4xl font-extrabold tracking-tight text-teal-600 dark:text-teal-400">
                   920
                 </dd>
-              </div>
-              <div className="flex flex-col bg-white/5 p-8">
-                <dt className="text-sm font-semibold leading-6 ">
-                  De todos os leilões do brasil
+                <dt className="text-sm font-medium leading-6 text-gray-700 dark:text-gray-200">
+                  Leiloeiros
                 </dt>
-                <dd className="order-first text-3xl font-semibold tracking-tight">
+              </div>
+
+              <div className="flex flex-col bg-gray-200 dark:bg-[#17181c] p-8 shadow-lg rounded-xl">
+                <dd className="order-first text-4xl font-extrabold tracking-tight text-teal-600 dark:text-teal-400">
                   90%
                 </dd>
+                <dt className="text-sm font-medium leading-6 text-gray-700 dark:text-gray-200">
+                  Cobertura nacional
+                </dt>
               </div>
             </dl>
           </div>
@@ -303,7 +247,7 @@ export default function Home() {
             >
               Sobre o produto
             </span>
-            <h2 className="my-4 font-bold text-3xl  sm:text-4xl ">
+            <h2 className="my-4 font-bold tracking-tight sm:text-3xl  dark:text-white text-gray-900">
               Todos os Leilões em um{" "}
               <span className="text-[#08A0A0]">Só Lugar</span>
             </h2>
@@ -332,11 +276,11 @@ export default function Home() {
       </div>
       <div className="pricing flex justify-center dark:bg-[#1e1f23] bg-[#f4f4f5]">
         <section id="pricing" className="container py-24 sm:py-32">
-          <h2 className="text-3xl md:text-4xl font-bold text-center ">
+          <h2 className="font-bold tracking-tight sm:text-3xl  dark:text-white text-gray-900font-bold text-center ">
             Obtenha
             <span className=""> Acesso </span>
           </h2>
-          <h3 className="text-xl text-center text-muted-foreground pt-4 pb-8 ">
+          <h3 className="text-xl text-center  pt-4 pb-8 ">
             Nossos planos sao personalizados para todos os tipos de leiloeiros
             do Brasil.
           </h3>
@@ -586,6 +530,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

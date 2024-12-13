@@ -333,7 +333,7 @@ export default function CardAuction({ items }: CardAuctionProps) {
                       ) : (
                         <div className="h-5 w-20" />
                       )}
-                      <h1 className="font-geist-mono text-xl items-center font-semibold dark:text-green-400 text-green-600">
+                      <h1 className="font-geist-mono text-xl items-center font-semibold text-[#08A0A0]">
                         {item.discountedPrice
                           ? formattedPrice(item.discountedPrice)
                           : formattedPrice(item.originalPrice)}
@@ -428,7 +428,7 @@ export default function CardAuction({ items }: CardAuctionProps) {
                 </button>
                 <button
                   type="button"
-                  className=" more-info w-full text-xs dark:bg-[#363636] bg-[#e9e9e9] dark:text-white text-black font-bold py-2.5 px-5 rounded"
+                  className=" more-info w-full text-xs dark:bg-[#292b31] bg-[#e9e9e9] dark:text-white text-black  py-2.5 px-5 rounded"
                 >
                   Abrir no maps
                 </button>

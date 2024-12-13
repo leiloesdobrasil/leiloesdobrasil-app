@@ -3,14 +3,10 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { ModeToggle } from "./ModeToggle";
-import { useTheme } from "next-themes";
-import LogoLight from "../assets/logolight.svg";
-import LogoDark from "../assets/logodark.svg";
+
+import IconLogo from "../assets/iconlogo.svg";
 
 export default function Header() {
-  const { theme } = useTheme();
-  const currentTheme = theme === "dark" ? "dark" : "light";
-
   const handleSmoothScroll = (e: MouseEvent, targetId: string) => {
     e.preventDefault();
 
@@ -24,16 +20,18 @@ export default function Header() {
   };
 
   return (
-    <header className="p-4  bg-background w-full sticky top-0 z-50">
+    <header className="p-4  bg-background dark:bg-[#17181c] w-full sticky top-0 z-50">
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo Section */}
         <div className="flex items-center space-x-3">
           <Image
-            src={currentTheme === "dark" ? LogoLight : LogoDark}
-            alt="logo"
-            className="rounded-md"
-            width={200}
-            height={50}
+            src={IconLogo}
+            alt={"logo"}
+            className=" object-cover"
+            style={{
+              borderRadius: "6px",
+            }}
+            width={60}
           />
         </div>
 
