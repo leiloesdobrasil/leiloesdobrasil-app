@@ -22,6 +22,7 @@ interface ImovelProps {
   title: string;
   road: string;
   photos: string;
+  firstAuctionPrice: number;
   originalPrice: number;
   firstAuctionDate: string;
   secondAuctionDate: string;
@@ -336,7 +337,7 @@ export default function CardAuction({ items }: CardAuctionProps) {
                       <h1 className="font-geist-mono text-xl items-center font-semibold text-[#08A0A0]">
                         {item.discountedPrice
                           ? formattedPrice(item.discountedPrice)
-                          : formattedPrice(item.originalPrice)}
+                          : formattedPrice(item.firstAuctionPrice)}
                       </h1>
                     </div>
 

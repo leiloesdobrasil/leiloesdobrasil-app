@@ -6,7 +6,6 @@ import { Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -15,6 +14,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { FieldsFilterProperties } from "./FieldsFIlterProperties";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function FilterButtonProperties() {
   return (
@@ -32,17 +32,15 @@ export function FilterButtonProperties() {
               Facilite sua pesquisa aplicando nossos filtros.
             </DrawerDescription>
           </DrawerHeader>
-          <div className="p-4 pb-0">
-            <div className="flex items-center justify-center space-x-2">
-              <FieldsFilterProperties />
+          <ScrollArea className="h-[800px]">
+            <div className="p-4 pb-0">
+              <div className="flex items-center justify-center space-x-2">
+                <FieldsFilterProperties />
+              </div>
             </div>
-          </div>
+          </ScrollArea>
 
-          <DrawerFooter className="flex justify-end">
-            <DrawerClose asChild>
-              <Button variant="outline">Cancelar</Button>
-            </DrawerClose>
-          </DrawerFooter>
+          <DrawerFooter className="flex justify-end"></DrawerFooter>
         </div>
       </DrawerContent>
     </Drawer>

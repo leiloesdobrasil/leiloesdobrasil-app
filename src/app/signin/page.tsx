@@ -80,7 +80,7 @@ export default function Signin() {
           sessionStorage.setItem("userName", fullName);
 
           toast.success("Usuário registrado com sucesso!");
-          await router.push("/payment");
+          await router.push("/login");
         } else {
           toast.error("Erro: Customer ID não encontrado.");
         }

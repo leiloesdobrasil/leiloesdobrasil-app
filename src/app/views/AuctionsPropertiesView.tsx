@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import CardAuctionFilter from "../../components/CardAuctionFilter";
 import { SkeletonCard } from "../../components/SkeletonCard";
+import { AxiosError } from "axios";
 
 export default function AuctionsPropertiesView() {
   const router = useRouter();
@@ -48,16 +49,21 @@ export default function AuctionsPropertiesView() {
       } else {
         setNoAuctionsMessage("");
       }
-    } catch (error: any) {
-      if (error.response) {
-        if (error.response.status === 404) {
-          setNoAuctionsMessage("Leilão não encontrado.");
-          setTotalPages(0);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          if (error.response.status === 404) {
+            setNoAuctionsMessage("Leilão não encontrado.");
+            setTotalPages(0);
+          } else {
+            console.error("Erro ao buscar leilões:", error.response);
+          }
         } else {
-          console.error("Erro ao buscar leilões:", error.response);
+          console.error("Erro de rede ou outro erro:", error);
+          setTotalPages(0);
         }
       } else {
-        console.error("Erro de rede ou outro erro:", error);
+        console.error("Erro desconhecido:", error);
         setTotalPages(0);
       }
     } finally {

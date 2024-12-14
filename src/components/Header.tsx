@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-
 import Link from "next/link";
 import Image from "next/image";
 import { ModeToggle } from "./ModeToggle";
@@ -7,7 +6,10 @@ import { ModeToggle } from "./ModeToggle";
 import IconLogo from "../assets/iconlogo.svg";
 
 export default function Header() {
-  const handleSmoothScroll = (e: MouseEvent, targetId: string) => {
+  const handleSmoothScroll = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    targetId: string
+  ) => {
     e.preventDefault();
 
     const targetElement = document.getElementById(targetId);
@@ -20,14 +22,14 @@ export default function Header() {
   };
 
   return (
-    <header className="p-4  bg-background dark:bg-[#17181c] w-full sticky top-0 z-50">
+    <header className="p-4 bg-background dark:bg-[#17181c] w-full sticky top-0 z-50">
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo Section */}
         <div className="flex items-center space-x-3">
           <Image
             src={IconLogo}
             alt={"logo"}
-            className=" object-cover"
+            className="object-cover"
             style={{
               borderRadius: "6px",
             }}

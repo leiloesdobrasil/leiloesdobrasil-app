@@ -5,6 +5,7 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { CalendarIcon } from "lucide-react";
+import { NumericFormat } from "react-number-format";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -16,7 +17,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Input } from "@/components/ui/input";
+
 import {
   Form,
   FormControl,
@@ -35,7 +36,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { getBaseUrl } from "@/utils/helper";
 import { useRouter } from "next/navigation";
-import { format } from "path";
+import { DrawerClose } from "./ui/drawer";
 
 interface Estado {
   label: string;
@@ -62,34 +63,82 @@ interface BairrosResponse {
   data: Bairro[];
 }
 
+interface Tipodeleilao {
+  label: string;
+  value: string;
+  sale_type: string;
+}
+interface TipoDeLeilaoResponse {
+  saleTypes?: Tipodeleilao[];
+}
+
 interface FormValues {
   estado: string[];
   cidade: string[];
   bairro: string[];
-  minPrice: number | undefined;
-  maxPrice: number | undefined;
+  minPrice: string;
+  maxPrice: string;
   desconto: number | undefined;
   dataInicio: string | undefined;
   dataFim: string | undefined;
+  tipodeleilao: string[];
 }
 
 const FormSchema = z.object({
-  estado: z.array(z.string().min(1, "Estado é obrigatório.")), // Obrigatório
-  cidade: z.array(z.string()).optional(), // Opcional, mas sempre array
+  estado: z.array(z.string().min(1, "Estado é obrigatório.")),
+  cidade: z.array(z.string()).optional(),
   bairro: z.array(z.string()).optional(),
-  minPrice: z.number().optional(),
-  maxPrice: z.number().optional(),
+  minPrice: z.string().optional(),
+  maxPrice: z.string().optional(),
   desconto: z.number().optional(),
   dataInicio: z.string().optional(),
   dataFim: z.string().optional(),
+  tipodeleilao: z.array(z.string().optional()),
 });
 
 export function FieldsFilterProperties() {
   const router = useRouter();
 
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+
+    const estadoFromUrl = queryParams.get("state")?.split(",") || [];
+    const cidadeFromUrl = queryParams.get("city")?.split(",") || [];
+    const bairroFromUrl = queryParams.get("district")?.split(",") || [];
+    const tipodeleilao = queryParams.get("type")?.split(",") || [];
+    const minPriceFromUrl = queryParams.get("minPrice")
+      ? String(queryParams.get("minPrice"))
+          .replace("R%24", "")
+          .replace(/[^\d,\.]/g, "")
+          .replace(",", ".")
+      : "";
+    const maxPriceFromUrl = queryParams.get("maxPrice")
+      ? String(queryParams.get("maxPrice"))
+          .replace("R%24", "")
+          .replace(/[^\d,\.]/g, "")
+          .replace(",", ".")
+      : "";
+    const descontoFromUrl = queryParams.get("discount")
+      ? Number(queryParams.get("discount"))
+      : undefined;
+    const dataInicioFromUrl = queryParams.get("startDate") || undefined;
+    const dataFimFromUrl = queryParams.get("endDate") || undefined;
+
+    form.setValue("estado", estadoFromUrl);
+    form.setValue("cidade", cidadeFromUrl);
+    form.setValue("bairro", bairroFromUrl);
+    form.setValue("minPrice", minPriceFromUrl);
+    form.setValue("maxPrice", maxPriceFromUrl);
+    form.setValue("desconto", descontoFromUrl);
+    form.setValue("dataInicio", dataInicioFromUrl);
+    form.setValue("dataFim", dataFimFromUrl);
+    form.setValue("tipodeleilao", tipodeleilao);
+  }, [router]);
+
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [estados, setEstados] = useState<Estado[]>([]);
   const [cidades, setCidades] = useState<Cidade[]>([]);
+  const [tipoDeLeilao, setTipodeLeilao] = useState<Tipodeleilao[]>([]);
   const [bairros, setBairros] = useState<Bairro[]>([]);
 
   const form = useForm<FormValues>({
@@ -98,7 +147,6 @@ export function FieldsFilterProperties() {
 
   const selectedEstado = form.watch("estado");
   const selectedCidades = form.watch("cidade");
-  const selectedBairro = form.watch("bairro");
 
   useEffect(() => {
     const fetchEstados = async () => {
@@ -115,10 +163,12 @@ export function FieldsFilterProperties() {
           },
         });
 
-        const parsedEstados = response.data.state.map((estado: any) => ({
-          label: estado.state,
-          value: estado.state.toLowerCase(),
-        }));
+        const parsedEstados = response.data.state.map(
+          (estado: { state: string }) => ({
+            label: estado.state,
+            value: estado.state.toLowerCase(),
+          })
+        );
         setEstados(parsedEstados);
       } catch (error) {
         console.error("Erro ao buscar estados:", error);
@@ -198,7 +248,7 @@ export function FieldsFilterProperties() {
           const parsedBairros = bairrosData.map((bairro) => ({
             label: bairro.district,
             value: bairro.district.toLowerCase(),
-            district: bairro.district, // Incluímos essa propriedade para satisfazer o tipo Bairro
+            district: bairro.district,
           }));
           setBairros(parsedBairros);
         } else {
@@ -213,6 +263,47 @@ export function FieldsFilterProperties() {
 
     fetchBairros();
   }, [selectedCidades]);
+
+  useEffect(() => {
+    const fetchSaleType = async () => {
+      try {
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+          console.error("Token não encontrado.");
+          return;
+        }
+
+        const response = await axios.get<TipoDeLeilaoResponse>(
+          `${getBaseUrl()}/filters/auctions`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const saleTypeData = response.data?.saleTypes;
+        if (Array.isArray(saleTypeData)) {
+          const parsedTipodeLeilao = saleTypeData.map(
+            (tipodeleilao: { sale_type: string }) => ({
+              label: tipodeleilao.sale_type,
+              value: tipodeleilao.sale_type.toLowerCase(),
+              sale_type: tipodeleilao.sale_type,
+            })
+          );
+          setTipodeLeilao(parsedTipodeLeilao);
+        } else {
+          console.error(
+            "Dados de tipo de leilão não encontrados ou formato inválido."
+          );
+        }
+      } catch (error) {
+        console.error("Erro ao buscar tipo de leilão:", error);
+      }
+    };
+
+    fetchSaleType();
+  }, []);
 
   const buildQueryParams = (data: FormValues) => {
     const queryParams = new URLSearchParams();
@@ -241,15 +332,18 @@ export function FieldsFilterProperties() {
     if (data.dataFim) {
       queryParams.set("endDate", data.dataFim);
     }
+    if (data.tipodeleilao?.length) {
+      queryParams.set("type", data.tipodeleilao.join(","));
+    }
 
     return queryParams.toString();
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
+    sessionStorage.setItem("filters", JSON.stringify(data));
     console.log("Dados submetidos:", data);
     const queryParams = buildQueryParams(data);
     router.push(`/dashboard?${queryParams}`);
-    alert("Filtros aplicados!");
   };
 
   const isCidadeDisabled = !selectedEstado || selectedEstado.length === 0;
@@ -420,7 +514,9 @@ export function FieldsFilterProperties() {
                         !field.value && "text-muted-foreground"
                       )}
                     >
-                      {field.value || "Selecione o bairro"}
+                      {field.value?.length > 0
+                        ? field.value.join(", ").toUpperCase()
+                        : "Selecione o Bairro"}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </FormControl>
@@ -471,43 +567,217 @@ export function FieldsFilterProperties() {
           )}
         />
 
+        {/* tipo de leilao */}
+        <FormField
+          control={form.control}
+          name="tipodeleilao"
+          render={({ field }) => (
+            <FormItem className="flex flex-col space-y-2">
+              <FormLabel>Tipo de Leilao</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-full justify-between",
+                        field.value?.length === 0 && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value?.length > 0
+                        ? field.value.join(", ").toUpperCase()
+                        : "Selecione o tipo de leilao"}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[350px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Pesquisar estado..." />
+                    <CommandList>
+                      <CommandEmpty>
+                        Nenhum tipo de leilao encontrado.
+                      </CommandEmpty>
+                      <CommandGroup>
+                        {tipoDeLeilao.map((tipodeleilao) => (
+                          <CommandItem
+                            key={tipodeleilao.value}
+                            value={tipodeleilao.label}
+                            onSelect={() => {
+                              const currentValue = field.value || [];
+                              if (currentValue.includes(tipodeleilao.value)) {
+                                form.setValue(
+                                  "tipodeleilao",
+                                  currentValue.filter(
+                                    (e) => e !== tipodeleilao.value
+                                  )
+                                );
+                              } else {
+                                form.setValue("tipodeleilao", [
+                                  ...currentValue,
+                                  tipodeleilao.value,
+                                ]);
+                              }
+                            }}
+                          >
+                            {tipodeleilao.label}
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                field.value?.includes(tipodeleilao.value)
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* tipo de leilao */}
+        <FormField
+          control={form.control}
+          name="tipodeleilao"
+          render={({ field }) => (
+            <FormItem className="flex flex-col space-y-2">
+              <FormLabel>Tipo de Leilao</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-full justify-between",
+                        field.value?.length === 0 && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value?.length > 0
+                        ? field.value.join(", ").toUpperCase()
+                        : "Selecione o tipo de leilao"}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[350px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Pesquisar estado..." />
+                    <CommandList>
+                      <CommandEmpty>
+                        Nenhum tipo de leilao encontrado.
+                      </CommandEmpty>
+                      <CommandGroup>
+                        {tipoDeLeilao.map((tipodeleilao) => (
+                          <CommandItem
+                            key={tipodeleilao.value}
+                            value={tipodeleilao.label}
+                            onSelect={() => {
+                              const currentValue = field.value || [];
+                              if (currentValue.includes(tipodeleilao.value)) {
+                                form.setValue(
+                                  "tipodeleilao",
+                                  currentValue.filter(
+                                    (e) => e !== tipodeleilao.value
+                                  )
+                                );
+                              } else {
+                                form.setValue("tipodeleilao", [
+                                  ...currentValue,
+                                  tipodeleilao.value,
+                                ]);
+                              }
+                            }}
+                          >
+                            {tipodeleilao.label}
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                field.value?.includes(tipodeleilao.value)
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         {/* Min and Max Price */}
-        <div className="flex space-x-4">
-          <FormField
-            control={form.control}
-            name="minPrice"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Preço Mínimo</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Selecione um valor"
-                    type="number"
-                    className="border rounded w-full px-2 py-1"
-                    {...field}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="maxPrice"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Preço Máximo</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Selecione um valor"
-                    type="number"
-                    className="border rounded w-full px-2 py-1"
-                    {...field}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-        </div>
+        <FormField
+          control={form.control}
+          name="minPrice"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Preço Mínimo</FormLabel>
+              <FormControl>
+                <NumericFormat
+                  {...field}
+                  placeholder="Selecione um valor"
+                  type="text"
+                  className="border rounded bg-background w-full px-2 py-1"
+                  thousandSeparator="."
+                  decimalSeparator=","
+                  prefix="R$ "
+                  allowNegative={false}
+                  onValueChange={({ value }) => {
+                    // Limpar formatação e remover R$, pontos e vírgulas
+                    const cleanedValue = value
+                      ? value.replace(/[^\d]/g, "") // Remove qualquer coisa que não seja número
+                      : "";
+
+                    // Atualizar o valor no formulário com o número limpo
+                    field.onChange(cleanedValue); // Envia o número limpo (apenas dígitos)
+                  }}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="maxPrice"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Preço Máximo</FormLabel>
+              <FormControl>
+                <NumericFormat
+                  {...field}
+                  placeholder="Selecione um valor"
+                  type="text"
+                  className="border rounded bg-background w-full px-2 py-1"
+                  thousandSeparator="."
+                  decimalSeparator=","
+                  prefix="R$ "
+                  allowNegative={false}
+                  onValueChange={({ value }) => {
+                    // Limpar formatação e remover R$, pontos e vírgulas
+                    const cleanedValue = value
+                      ? value.replace(/[^\d]/g, "") // Remove qualquer coisa que não seja número
+                      : "";
+
+                    // Atualizar o valor no formulário com o número limpo
+                    field.onChange(cleanedValue); // Envia o número limpo (apenas dígitos)
+                  }}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
 
         {/* Desconto */}
         <FormField
@@ -517,11 +787,20 @@ export function FieldsFilterProperties() {
             <FormItem>
               <FormLabel>Desconto mínimo</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Selecione de 0% a 99%"
-                  type="number"
-                  className="border rounded w-full px-2 py-1"
+                <NumericFormat
                   {...field}
+                  placeholder="Selecione de 0% a 99%"
+                  type="text"
+                  className="border rounded bg-background w-full  px-2 py-1"
+                  thousandSeparator="."
+                  decimalSeparator=","
+                  prefix="% "
+                  allowNegative={false}
+                  onValueChange={({ value }) => {
+                    field.onChange(
+                      value ? Number(value.replace(/\D/g, "")) : undefined
+                    );
+                  }}
                 />
               </FormControl>
             </FormItem>
@@ -547,7 +826,6 @@ export function FieldsFilterProperties() {
                         )}
                       >
                         <CalendarIcon />
-                        {date ? format(date) : <span>Selecione uma data</span>}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0">
@@ -565,12 +843,14 @@ export function FieldsFilterProperties() {
           />
         </div>
 
-        <Button
-          className="w-full bg-teal-600 hover:bg-teal-700 text-white"
-          type="submit"
-        >
-          Aplicar Filtros
-        </Button>
+        <DrawerClose className="w-full">
+          <Button
+            className="w-full bg-teal-600 hover:bg-teal-700 text-white"
+            type="submit"
+          >
+            Aplicar Filtros
+          </Button>
+        </DrawerClose>
       </form>
     </Form>
   );

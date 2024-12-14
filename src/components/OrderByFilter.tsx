@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +16,13 @@ import {
 import { ArrowDownUp } from "lucide-react";
 
 export function OrderByFilter() {
-  const [position, setPosition] = React.useState("bottom");
+  const router = useRouter();
+  const [position, setPosition] = React.useState<string>("bottom");
+
+  const handleValueChange = (value: string) => {
+    setPosition(value);
+    router.push(`?sort=${value}`);
+  };
 
   return (
     <DropdownMenu>
@@ -27,23 +34,27 @@ export function OrderByFilter() {
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Ordenar por:</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
-          <DropdownMenuRadioItem value="top">
-            Mais proximo de finalizar
+        <DropdownMenuRadioGroup
+          value={position}
+          onValueChange={handleValueChange}
+        >
+          <DropdownMenuRadioItem value="">Sem ordenacao</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="endDateDesc">
+            Mais próximo de finalizar
           </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="bottom">
-            Menos proximo de finalizar
+          <DropdownMenuRadioItem value="endDateAsc">
+            Menos próximo de finalizar
           </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="right">
+          <DropdownMenuRadioItem value="priceDesc">
             Maior valor
           </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="right2">
+          <DropdownMenuRadioItem value="priceAsc">
             Menor valor
           </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="right3">
+          <DropdownMenuRadioItem value="discountDesc">
             Maior desconto
           </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="right4">
+          <DropdownMenuRadioItem value="discountAsc">
             Menor desconto
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
