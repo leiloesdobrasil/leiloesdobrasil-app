@@ -765,13 +765,11 @@ export function FieldsFilterProperties() {
                   prefix="R$ "
                   allowNegative={false}
                   onValueChange={({ value }) => {
-                    // Limpar formatação e remover R$, pontos e vírgulas
                     const cleanedValue = value
-                      ? value.replace(/[^\d]/g, "") // Remove qualquer coisa que não seja número
+                      ? value.replace(/[^\d]/g, "")
                       : "";
 
-                    // Atualizar o valor no formulário com o número limpo
-                    field.onChange(cleanedValue); // Envia o número limpo (apenas dígitos)
+                    field.onChange(cleanedValue);
                   }}
                 />
               </FormControl>

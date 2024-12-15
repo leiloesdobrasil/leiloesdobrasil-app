@@ -1,23 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { ShareFilter } from "./ShareFilter";
 import { OrderByFilter } from "./OrderByFilter";
 import { FilterButtonProperties } from "./FilterButtonProperties";
+import { PerPageSelect } from "./PerPageSelect";
 
 function CardAuctionFilter() {
   const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const searchParams = useSearchParams();
   const pathName = usePathname();
   const { replace } = useRouter();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const params = new URLSearchParams();
     const keyword = e.currentTarget.value;
     setSearchKeyword(keyword);
+
+    const params = new URLSearchParams(searchParams?.toString());
 
     if (keyword) {
       params.set("keyword", keyword);
@@ -47,6 +50,8 @@ function CardAuctionFilter() {
       </div>
       <div className="flex items-center">
         <OrderByFilter />
+        <PerPageSelect />
+
         <ShareFilter />
       </div>
     </div>

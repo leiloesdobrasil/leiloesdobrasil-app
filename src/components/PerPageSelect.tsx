@@ -13,18 +13,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowDownUp } from "lucide-react";
+import { Layers2 } from "lucide-react";
 
-export function OrderByFilter() {
+export function PerPageSelect() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [position, setPosition] = React.useState<string>("");
+  const [position, setPosition] = React.useState<string>("bottom");
 
   const handleValueChange = (value: string) => {
     setPosition(value);
 
     const params = new URLSearchParams(searchParams?.toString());
-    params.set("sort", value);
+    params.set("perPage", value);
 
     router.push(`?${params.toString()}`);
   };
@@ -32,8 +32,8 @@ export function OrderByFilter() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary" className="ml-2 mr-2">
-          <ArrowDownUp /> Ordenar
+        <Button variant="secondary" className="mr-2">
+          <Layers2 /> Exibir por página
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
@@ -43,24 +43,20 @@ export function OrderByFilter() {
           value={position}
           onValueChange={handleValueChange}
         >
-          <DropdownMenuRadioItem value="">Sem ordenação</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="endDateDesc">
-            Mais próximo de finalizar
+          <DropdownMenuRadioItem value="15">
+            15 leilões por página
           </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="endDateAsc">
-            Menos próximo de finalizar
+          <DropdownMenuRadioItem value="30">
+            30 leilões por página
           </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="priceDesc">
-            Maior valor
+          <DropdownMenuRadioItem value="50">
+            50 leilões por página
           </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="priceAsc">
-            Menor valor
+          <DropdownMenuRadioItem value="70">
+            70 leilões por página
           </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="discountDesc">
-            Maior desconto
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="discountAsc">
-            Menor desconto
+          <DropdownMenuRadioItem value="100">
+            100 leilões por página
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
