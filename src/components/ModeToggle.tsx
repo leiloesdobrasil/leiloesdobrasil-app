@@ -14,12 +14,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export function ModeToggle() {
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+
+    if (!theme) {
+      setTheme("light");
+    }
+  }, [theme, setTheme]);
 
   if (!mounted) return null;
   return (
