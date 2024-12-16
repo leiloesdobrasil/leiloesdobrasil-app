@@ -31,9 +31,8 @@ export default function AuctionsPropertiesView() {
       const params = Object.fromEntries(searchParams.entries());
 
       const defaultParams = {
-        state: params.state || "SP", // Se o estado não estiver na URL, usará "SP"
-        perPage: params.perPage || "15", // Se a quantidade de itens não estiver definida, usará 15
-        page: params.page || "1", // Se a página não estiver definida, usará 1
+        perPage: params.perPage || "15",
+        page: params.page || "1",
       };
 
       // Misturando os parâmetros existentes com os valores padrão
