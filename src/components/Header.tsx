@@ -6,6 +6,7 @@ import { ModeToggle } from "./ModeToggle";
 import IconLogo from "../assets/iconlogo.svg";
 
 export default function Header() {
+
   const handleSmoothScroll = (
     e: React.MouseEvent<HTMLAnchorElement>,
     targetId: string
@@ -22,7 +23,8 @@ export default function Header() {
   };
 
   return (
-    <header className="p-4 bg-background dark:bg-[#17181c] w-full sticky top-0 z-50">
+    <header className={`fixed w-full z-50 transition-all duration-300 p-4 dark:bg-[#17181c] bg-white
+    }`}>
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo Section */}
         <div className="flex items-center space-x-3">

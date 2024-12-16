@@ -1,156 +1,58 @@
-import { useTheme } from "next-themes";
-import Image from "next/image";
-import Link from "next/link";
-import LogoLight from "../assets/logolight.svg";
-import LogoDark from "../assets/logodark.svg";
+import Link from 'next/link'
+import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react'
 
-const Footer = () => {
-  const { theme } = useTheme();
-  const currentTheme = theme === "dark" ? "dark" : "light";
-
+export default function Footer() {
   return (
-    <footer className="border py-10">
-      <div className="container mx-auto flex flex-col md:flex-row md:justify-between">
-        {/* Logo and Description */}
-        <div className="mb-8 md:mb-0">
-          <Image
-            src={currentTheme === "dark" ? LogoLight : LogoDark}
-            alt="logo"
-            className="rounded-md"
-            width={200}
-            height={50}
-          />
-          <p className="mt-4 max-w-xs">
-            Transformando o mercado de buscadores de Leilões.
+    <footer className="dark:bg-[#17181c] py-12 px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Leilões do Brasil</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Transformando o mercado de leilões online com inovação e segurança.
           </p>
-          <div className="flex space-x-4 mt-4">
-            {/* Social Media Links */}
-            <Link href="#">
-              <i className="fab fa-facebook hover:text-white"></i>
-            </Link>
-            <Link href="#">
-              <i className="fab fa-instagram hover:text-white"></i>
-            </Link>
-            <Link href="#">
-              <i className="fab fa-twitter hover:text-white"></i>
-            </Link>
-            <Link href="#">
-              <i className="fab fa-github hover:text-white"></i>
-            </Link>
-            <Link href="#">
-              <i className="fab fa-youtube hover:text-white"></i>
-            </Link>
-          </div>
         </div>
-
-        {/* Links Section */}
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-          {/* Solutions */}
-          <div>
-            <h5 className="text-white font-semibold mb-4">Solutions</h5>
-            <ul className="space-y-2">
-              <li>
-                <Link href="#" className="hover:text-white">
-                  Marketing
+        <div>
+          <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Links Rápidos</h4>
+          <ul className="space-y-2">
+            {['Sobre Nós', 'Como Funciona', 'Leilões Ativos', 'Contato'].map((item) => (
+              <li key={item}>
+                <Link href="#" className="text-sm text-gray-600 hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400 transition-colors duration-200">
+                  {item}
                 </Link>
               </li>
-              <li>
-                <Link href="#" className="hover:text-white">
-                  Analytics
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Suporte</h4>
+          <ul className="space-y-2">
+            {['FAQ', 'Política de Privacidade', 'Termos de Serviço', 'Ajuda'].map((item) => (
+              <li key={item}>
+                <Link href="#" className="text-sm text-gray-600 hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400 transition-colors duration-200">
+                  {item}
                 </Link>
               </li>
-              <li>
-                <Link href="#" className="hover:text-white">
-                  Automation
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-white">
-                  Commerce
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-white">
-                  Insights
-                </Link>
-              </li>
-            </ul>
-          </div>
-          {/* Support */}
-          <div>
-            <h5 className="text-white font-semibold mb-4">Support</h5>
-            <ul className="space-y-2">
-              <li>
-                <Link href="#" className="hover:text-white">
-                  Submit ticket
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-white">
-                  Documentation
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-white">
-                  Guides
-                </Link>
-              </li>
-            </ul>
-          </div>
-          {/* Company */}
-          <div>
-            <h5 className="text-white font-semibold mb-4">Company</h5>
-            <ul className="space-y-2">
-              <li>
-                <Link href="#" className="hover:text-white">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-white">
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-white">
-                  Jobs
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-white">
-                  Press
-                </Link>
-              </li>
-            </ul>
-          </div>
-          {/* Legal */}
-          <div>
-            <h5 className="text-white font-semibold mb-4">Legal</h5>
-            <ul className="space-y-2">
-              <li>
-                <Link href="#" className="hover:text-white">
-                  Terms of service
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-white">
-                  Privacy policy
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-white">
-                  License
-                </Link>
-              </li>
-            </ul>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Siga-nos</h4>
+          <div className="flex space-x-4">
+            {[Facebook, Twitter, Instagram, Linkedin].map((Icon, index) => (
+              <a key={index} href="#" className="text-gray-600 hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400 transition-colors duration-200">
+                <Icon className="w-6 h-6" />
+              </a>
+            ))}
           </div>
         </div>
       </div>
-      <div className="border-t border-gray-800 mt-10 pt-6 text-center text-sm">
-        © 2024 Your Company, Inc. All rights reserved.
+      <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800">
+        <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+          © 2024 Leilões do Brasil. Todos os direitos reservados.
+        </p>
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+
