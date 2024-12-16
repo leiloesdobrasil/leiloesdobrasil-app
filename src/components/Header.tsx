@@ -23,7 +23,7 @@ export default function Header() {
   };
 
   return (
-    <header className={`fixed w-full z-50 transition-all duration-300 p-4 dark:bg-[#17181c] bg-white
+    <header className={`fixed w-full z-50 transition-all duration-300 p-4 dark:bg-[#17181c] border-b bg-white
     }`}>
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo Section */}

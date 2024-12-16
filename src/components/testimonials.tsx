@@ -50,11 +50,11 @@ export default function Testimonials() {
   const prevTestimonial = () => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + testimonials.length) % testimonials.length)
   }
-
+ 
   return (
-    <section id="depoimentos" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-emerald-50 to-teal-100 dark:from-gray-900 dark:to-emerald-950">
+    <section id="depoimentos" className="py-40 px-16 sm:px-6 lg:px-8 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-white via-teal-200 to-teal-50 from-teal-200 to-teal-400 dark:bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-white via-teal-700 to-[#17181c] from-teal-600 to-teal-400 ">
       <div className="container mx-auto">
-        <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+        <h2 className="text-3xl sm:text-4xl font-semibold text-center mb-12 m- text-white">
           O Que Nossos Clientes Dizem
         </h2>
         <div className="relative max-w-3xl mx-auto">
@@ -66,15 +66,15 @@ export default function Testimonials() {
               exit={{ opacity: 0, x: -50 }}
               transition={{ duration: 0.5 }}
             >
-              <Card className="bg-white dark:bg-gray-800 border-emerald-200 dark:border-emerald-800 shadow-lg">
-                <CardContent className="p-6">
+              <Card className="bg-white dark:bg-[#17181c] border-teal-200 dark:border-teal-800 shadow-lg">
+                <CardContent className="p-4">
                   <div className="flex items-center space-x-4 mb-4">
                     <Avatar>
                       <AvatarImage src={testimonials[currentIndex].avatar} alt={testimonials[currentIndex].name} />
                       <AvatarFallback>{testimonials[currentIndex].name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-semibold text-gray-900 dark:text-white">{testimonials[currentIndex].name}</p>
+                      <p className="font-semibold text-[#17181c] dark:text-white">{testimonials[currentIndex].name}</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">{testimonials[currentIndex].role}</p>
                     </div>
                   </div>
@@ -85,17 +85,17 @@ export default function Testimonials() {
           </AnimatePresence>
           <button
             onClick={prevTestimonial}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full bg-white dark:bg-gray-800 rounded-full p-2 shadow-md hover:bg-emerald-100 dark:hover:bg-emerald-900 transition-colors duration-200"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full bg-white dark:bg-[#17181c] rounded-full p-2 shadow-md hover:bg-teal-100 dark:hover:bg-teal-900 transition-colors duration-200"
             aria-label="Previous testimonial"
           >
-            <ChevronLeft className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+            <ChevronLeft className="w-6 h-6 text-teal-600 dark:text-teal-400" />
           </button>
           <button
             onClick={nextTestimonial}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-full bg-white dark:bg-gray-800 rounded-full p-2 shadow-md hover:bg-emerald-100 dark:hover:bg-emerald-900 transition-colors duration-200"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-full bg-white dark:bg-[#17181c] rounded-full p-2 shadow-md hover:bg-teal-100 dark:hover:bg-teal-900 transition-colors duration-200"
             aria-label="Next testimonial"
           >
-            <ChevronRight className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+            <ChevronRight className="w-6 h-6 text-teal-600 dark:text-teal-400" />
           </button>
         </div>
       </div>

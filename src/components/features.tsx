@@ -39,7 +39,7 @@ const features = [
 
 export default function Features() {
   return (
-    <section id="recursos" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950">
+    <section id="recursos" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#17181c] ">
       <div className="container mx-auto">
         <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
           Nossos Recursos
@@ -52,9 +52,9 @@ export default function Features() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="bg-gradient-to-br from-white to-emerald-50 dark:from-gray-800 dark:to-emerald-950 border-emerald-200 dark:border-emerald-800 hover:shadow-lg transition-shadow duration-300">
+              <Card className="bg-gradient-to-br from-white to-teal-50 dark:from-gray-800 dark:to-teal-950 border-teal-200 dark:border-teal-800 hover:shadow-lg transition-shadow duration-300">
                 <CardHeader>
-                  <feature.icon className="w-10 h-10 mb-4 text-emerald-600 dark:text-emerald-400" />
+                  <feature.icon className="w-10 h-10 mb-4 text-teal-600 dark:text-teal-400" />
                   <CardTitle className="text-gray-900 dark:text-white">{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
