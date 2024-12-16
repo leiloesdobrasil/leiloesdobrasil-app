@@ -28,19 +28,25 @@ export default function AuctionsPropertiesView() {
     }
 
     try {
+      // Obtém os parâmetros atuais da URL
       const params = Object.fromEntries(searchParams.entries());
 
+      // Define os parâmetros padrão
       const defaultParams = {
         perPage: params.perPage || "15",
         page: params.page || "1",
       };
 
-      // Misturando os parâmetros existentes com os valores padrão
-      const newParams = new URLSearchParams({ ...defaultParams, ...params });
-      router.push(`/dashboard?${newParams.toString()}`, undefined); // Atualiza a URL sem sobrescrever completamente
+      // Mistura os parâmetros existentes com os valores padrão
+      const apiParams = { ...defaultParams, ...params };
 
+      // Atualiza a URL para refletir todos os parâmetros
+      const newParams = new URLSearchParams(apiParams);
+      router.push(`/dashboard?${newParams.toString()}`, undefined);
+
+      // Faz a requisição à API com os parâmetros misturados
       const response = await api.get("/auctions", {
-        params: defaultParams, // Passa apenas os valores padrão para a requisição
+        params: apiParams,
         headers: {
           Authorization: `Bearer ${token}`,
         },

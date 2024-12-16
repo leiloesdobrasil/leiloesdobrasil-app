@@ -94,7 +94,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex flex-col lg:flex-row">
       <ToastContainer
         position="bottom-right"
         autoClose={5000}
@@ -116,13 +116,30 @@ export default function Login() {
           Voltar
         </Link>
       </div>
-      <div className="w-1/2 p-12 flex flex-col justify-center">
+      <div className="w-full lg:w-1/2 p-12 flex flex-col justify-center">
         <div className="mt-12">
           <div>
             <div className="flex flex-col px-6 py-8 mx-auto lg:py-0">
-              <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                <h2 className="text-3xl font-bold mb-4">Bem-vindo de volta!</h2>
-                <p className="text-gray-600 mb-8">
+              {/* Logo visível apenas no mobile */}
+              <div className="mb-4 lg:hidden flex justify-center">
+                <Image
+                  src={currentTheme === "dark" ? LogoLight : LogoDark}
+                  alt="logo"
+                  className="max-w-[200px] object-cover"
+                  style={{
+                    borderRadius: "6px",
+                  }}
+                  width={150}
+                />
+              </div>
+
+              <div className="space-y-4 md:space-y-6 sm:p-8">
+                {/* Tamanho da fonte responsivo para o título */}
+                <h2 className="text-2xl font-bold mb-4 sm:text-3xl">
+                  Bem-vindo de volta!
+                </h2>
+                {/* Tamanho da fonte responsivo para o texto de subtítulo */}
+                <p className="text-gray-600 mb-8 text-sm sm:text-base">
                   Entre com seu e-mail e senha
                 </p>
                 <form
@@ -130,7 +147,7 @@ export default function Login() {
                   onSubmit={handleSubmit}
                 >
                   <div>
-                    <label className="block mb-2 text-sm font-medium">
+                    <label className="block mb-2 text-sm font-medium sm:text-base">
                       E-mail
                     </label>
                     <input
@@ -139,7 +156,7 @@ export default function Login() {
                       id="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className="border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      className="border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-sm sm:text-base dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="name@company.com"
                       required
                     />
@@ -147,7 +164,7 @@ export default function Login() {
                   <div>
                     <label
                       htmlFor="password"
-                      className="block mb-2 text-sm font-medium "
+                      className="block mb-2 text-sm font-medium sm:text-base"
                     >
                       Senha
                     </label>
@@ -158,7 +175,7 @@ export default function Login() {
                       value={formData.password}
                       onChange={handleChange}
                       placeholder="••••••••"
-                      className="border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      className="border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-sm sm:text-base dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       required
                     />
                   </div>
@@ -175,7 +192,7 @@ export default function Login() {
                           className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
                         />
                       </div>
-                      <div className="ml-3 text-sm">
+                      <div className="ml-3 text-sm sm:text-base">
                         <label className="text-gray-500">
                           Lembre-se de mim
                         </label>
@@ -183,18 +200,18 @@ export default function Login() {
                     </div>
                     <a
                       href="#"
-                      className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
+                      className="text-sm sm:text-base font-medium text-primary-600 hover:underline dark:text-primary-500"
                     >
                       Esqueceu a sua senha?
                     </a>
                   </div>
                   <button
                     type="submit"
-                    className="w-full text-white bg-[#08A0A0] hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                    className="w-full text-white bg-[#08A0A0] hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm sm:text-base px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                   >
                     Entrar
                   </button>
-                  <p className="text-sm font-light text-gray-500">
+                  <p className="text-sm sm:text-base font-light text-gray-500">
                     Não tem uma conta ainda?{" "}
                     <Link
                       href="/signin"
@@ -209,12 +226,12 @@ export default function Login() {
           </div>
         </div>
       </div>
-      <div className="w-1/2 dark:bg-[#17181c] bg-[#f4f4f5] text-white p-12 flex flex-col justify-between rounded-md m-4">
+      <div className="hidden lg:flex w-1/2 dark:bg-[#17181c] bg-[#f4f4f5] text-white p-12 flex-col justify-between rounded-md m-4">
         <div>
           <Image
             src={currentTheme === "dark" ? LogoLight : LogoDark}
             alt={"logo"}
-            className=" max-w-[500px] object-cover"
+            className="max-w-[500px] object-cover"
             style={{
               borderRadius: "6px",
             }}

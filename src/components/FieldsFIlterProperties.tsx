@@ -163,11 +163,17 @@ export function FieldsFilterProperties() {
   const buildQueryParams = (data: FormValues) => {
     const queryParams = new URLSearchParams();
 
-    if (data.estado?.length) queryParams.set("state", data.estado.join(";")); // Alterar vírgula por ponto e vírgula
-    if (data.cidade?.length) queryParams.set("city", data.cidade.join(";"));
-    if (data.bairro?.length) queryParams.set("district", data.bairro.join(";"));
+    if (data.estado?.length) {
+      queryParams.set("state", data.estado.join(","));
+    }
+    if (data.cidade?.length) {
+      queryParams.set("city", data.cidade.join(","));
+    }
+    if (data.bairro) {
+      queryParams.set("district", data.bairro.join(","));
+    }
     if (data.tipodeleilao?.length)
-      queryParams.set("type", data.tipodeleilao.join(";"));
+      queryParams.set("type", data.tipodeleilao.join(","));
 
     if (data.minPrice)
       queryParams.set("minPrice", sanitizePrice(data.minPrice));
@@ -733,11 +739,15 @@ export function FieldsFilterProperties() {
                   {...field}
                   placeholder="Selecione de 0% a 99%"
                   type="text"
-                  className="border rounded bg-background w-full  px-2 py-1"
+                  className="border rounded bg-background w-full px-2 py-1"
                   thousandSeparator="."
                   decimalSeparator=","
                   prefix="% "
                   allowNegative={false}
+                  isAllowed={({ value }) => {
+                    const numericValue = Number(value.replace(/\D/g, ""));
+                    return numericValue >= 0 && numericValue <= 99;
+                  }}
                   onValueChange={({ value }) => {
                     field.onChange(
                       value ? Number(value.replace(/\D/g, "")) : undefined
