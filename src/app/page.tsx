@@ -11,7 +11,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-white to-emerald-50 dark:from-gray-950 dark:to-emerald-950">
       <Header />
-      <main>
+      <main className='mt-10'>
         <Hero />
         <Features />
         <Testimonials />
