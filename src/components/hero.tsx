@@ -89,7 +89,8 @@ export default function Hero() {
             </Button>
             <Button
               size="lg"
-              className="text-gray-700 border-gray-400 hover:bg-neutral-900 dark:bg-[#17181c] dark:text-neutral-300 dark:border-gray-600 dark:hover:bg-neutral-800 dark:hover:text-white transition-all duration-300 transform hover:scale-105"
+              variant="outline"
+              className="text-gray-700 border-gray-400 hover:bg-gray-200 dark:bg-[#17181c] dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white transition-all duration-300 transform hover:scale-105"
             >
               Saber mais
             </Button>
