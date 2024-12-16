@@ -30,11 +30,18 @@ export default function AuctionsPropertiesView() {
     try {
       const params = Object.fromEntries(searchParams.entries());
 
-      params.page = params.page || "1";
-      params.perPage = params.perPage || "10";
+      const defaultParams = {
+        state: params.state || "SP", // Se o estado não estiver na URL, usará "SP"
+        perPage: params.perPage || "15", // Se a quantidade de itens não estiver definida, usará 15
+        page: params.page || "1", // Se a página não estiver definida, usará 1
+      };
+
+      // Misturando os parâmetros existentes com os valores padrão
+      const newParams = new URLSearchParams({ ...defaultParams, ...params });
+      router.push(`/dashboard?${newParams.toString()}`, undefined); // Atualiza a URL sem sobrescrever completamente
 
       const response = await api.get("/auctions", {
-        params,
+        params: defaultParams, // Passa apenas os valores padrão para a requisição
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -74,24 +81,27 @@ export default function AuctionsPropertiesView() {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
 
+    // Atualiza os parâmetros da URL com o novo valor de página
     const newParams = new URLSearchParams(searchParams.toString());
     newParams.set("page", page.toString());
 
+    // Navega para a nova página com os parâmetros atualizados
     router.push(`/dashboard?${newParams.toString()}`, undefined);
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   useEffect(() => {
+    // Obtém o valor da página diretamente da URL e atualiza o estado
     const pageFromUrl = parseInt(searchParams.get("page") || "1");
     setCurrentPage(pageFromUrl);
+
+    // Chama a função para buscar os leilões sempre que a URL mudar
     fetchAuctions();
   }, [searchParams, fetchAuctions]);
 
-  console.log(totalPages);
-
   return (
     <>
+      {" "}
+      {/* Adicionando ref no container */}
       <CardAuctionFilter />
       {loading ? (
         <div className="flex flex-wrap justify-center">
@@ -104,7 +114,6 @@ export default function AuctionsPropertiesView() {
       ) : (
         <CardAuction items={auctions} />
       )}
-
       {totalPages > 1 && (
         <PaginationControls
           currentPage={currentPage}

@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
-import { CalendarIcon } from "lucide-react";
+
 import { NumericFormat } from "react-number-format";
 
 import { cn } from "@/lib/utils";
@@ -31,7 +31,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { getBaseUrl } from "@/utils/helper";
@@ -78,7 +78,7 @@ interface FormValues {
   bairro: string[];
   minPrice: string;
   maxPrice: string;
-  desconto: number | undefined;
+  desconto: string;
   dataInicio: string | undefined;
   dataFim: string | undefined;
   tipodeleilao: string[];
@@ -90,7 +90,7 @@ const FormSchema = z.object({
   bairro: z.array(z.string()).optional(),
   minPrice: z.string().optional(),
   maxPrice: z.string().optional(),
-  desconto: z.number().optional(),
+  desconto: z.string().optional(),
   dataInicio: z.string().optional(),
   dataFim: z.string().optional(),
   tipodeleilao: z.array(z.string().optional()),
@@ -99,31 +99,56 @@ const FormSchema = z.object({
 export function FieldsFilterProperties() {
   const router = useRouter();
 
+  const sanitizePrice = (price: string | null) => {
+    if (!price) return "";
+
+    // Decodificar o valor da URL
+    const decodedPrice = decodeURIComponent(price);
+
+    // Remove 'R$', '+', e outros caracteres não numéricos
+    const cleanedPrice = decodedPrice
+      .replace("R$", "") // Remove 'R$'
+      .replace(/[^\d]/g, ""); // Remove tudo que não for número
+
+    return cleanedPrice;
+  };
+
+  const sanitizePercentage = (percentage: string | null) => {
+    if (!percentage) return "";
+
+    let decodedPrice = "";
+
+    try {
+      decodedPrice = decodeURIComponent(percentage);
+    } catch {
+      decodedPrice = percentage;
+    }
+
+    const cleanedPrice = decodedPrice
+      .replace("%", "") // Remove '%'
+      .replace(/[^\d]/g, ""); // Remove tudo que não for número
+
+    return cleanedPrice;
+  };
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
 
+    // Decodificar o valor da URL e substituir o caractere especial de volta para vírgula
     const estadoFromUrl = queryParams.get("state")?.split(",") || [];
     const cidadeFromUrl = queryParams.get("city")?.split(",") || [];
     const bairroFromUrl = queryParams.get("district")?.split(",") || [];
     const tipodeleilao = queryParams.get("type")?.split(",") || [];
-    const minPriceFromUrl = queryParams.get("minPrice")
-      ? String(queryParams.get("minPrice"))
-          .replace("R%24", "")
-          .replace(/[^\d,\.]/g, "")
-          .replace(",", ".")
-      : "";
-    const maxPriceFromUrl = queryParams.get("maxPrice")
-      ? String(queryParams.get("maxPrice"))
-          .replace("R%24", "")
-          .replace(/[^\d,\.]/g, "")
-          .replace(",", ".")
-      : "";
-    const descontoFromUrl = queryParams.get("discount")
-      ? Number(queryParams.get("discount"))
-      : undefined;
+
+    // Sanitização de preços com a função sanitizePrice
+    const minPriceFromUrl = sanitizePrice(queryParams.get("minPrice"));
+    const maxPriceFromUrl = sanitizePrice(queryParams.get("maxPrice"));
+    const descontoFromUrl = sanitizePercentage(
+      queryParams.get("discountPercentage")
+    );
     const dataInicioFromUrl = queryParams.get("startDate") || undefined;
     const dataFimFromUrl = queryParams.get("endDate") || undefined;
 
+    // Definir os valores no formulário
     form.setValue("estado", estadoFromUrl);
     form.setValue("cidade", cidadeFromUrl);
     form.setValue("bairro", bairroFromUrl);
@@ -135,7 +160,28 @@ export function FieldsFilterProperties() {
     form.setValue("tipodeleilao", tipodeleilao);
   }, [router]);
 
-  const [date, setDate] = useState<Date | undefined>(undefined);
+  const buildQueryParams = (data: FormValues) => {
+    const queryParams = new URLSearchParams();
+
+    if (data.estado?.length) queryParams.set("state", data.estado.join(";")); // Alterar vírgula por ponto e vírgula
+    if (data.cidade?.length) queryParams.set("city", data.cidade.join(";"));
+    if (data.bairro?.length) queryParams.set("district", data.bairro.join(";"));
+    if (data.tipodeleilao?.length)
+      queryParams.set("type", data.tipodeleilao.join(";"));
+
+    if (data.minPrice)
+      queryParams.set("minPrice", sanitizePrice(data.minPrice));
+    if (data.maxPrice)
+      queryParams.set("maxPrice", sanitizePrice(data.maxPrice));
+    if (data.desconto) {
+      queryParams.set("discountPercentage", sanitizePercentage(data.desconto));
+    }
+    if (data.dataInicio) queryParams.set("startDate", data.dataInicio);
+    if (data.dataFim) queryParams.set("endDate", data.dataFim);
+
+    return queryParams.toString();
+  };
+
   const [estados, setEstados] = useState<Estado[]>([]);
   const [cidades, setCidades] = useState<Cidade[]>([]);
   const [tipoDeLeilao, setTipodeLeilao] = useState<Tipodeleilao[]>([]);
@@ -305,45 +351,18 @@ export function FieldsFilterProperties() {
     fetchSaleType();
   }, []);
 
-  const buildQueryParams = (data: FormValues) => {
-    const queryParams = new URLSearchParams();
-
-    if (data.estado?.length) {
-      queryParams.set("state", data.estado.join(","));
-    }
-    if (data.cidade?.length) {
-      queryParams.set("city", data.cidade.join(","));
-    }
-    if (data.bairro) {
-      queryParams.set("district", data.bairro.join(","));
-    }
-    if (data.minPrice !== undefined) {
-      queryParams.set("minPrice", data.minPrice.toString());
-    }
-    if (data.maxPrice !== undefined) {
-      queryParams.set("maxPrice", data.maxPrice.toString());
-    }
-    if (data.desconto !== undefined) {
-      queryParams.set("discount", data.desconto.toString());
-    }
-    if (data.dataInicio) {
-      queryParams.set("startDate", data.dataInicio);
-    }
-    if (data.dataFim) {
-      queryParams.set("endDate", data.dataFim);
-    }
-    if (data.tipodeleilao?.length) {
-      queryParams.set("type", data.tipodeleilao.join(","));
-    }
-
-    return queryParams.toString();
-  };
-
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     sessionStorage.setItem("filters", JSON.stringify(data));
-    console.log("Dados submetidos:", data);
+
     const queryParams = buildQueryParams(data);
-    router.push(`/dashboard?${queryParams}`);
+
+    const currentParams = new URLSearchParams(window.location.search);
+    queryParams.split("&").forEach((param) => {
+      const [key, value] = param.split("=");
+      if (value) currentParams.set(key, value);
+    });
+
+    router.push(`/dashboard?${currentParams.toString()}`);
   };
 
   const isCidadeDisabled = !selectedEstado || selectedEstado.length === 0;
@@ -370,7 +389,7 @@ export function FieldsFilterProperties() {
                         field.value?.length === 0 && "text-muted-foreground"
                       )}
                     >
-                      {field.value?.length > 0
+                      {field.value && field.value.length > 0
                         ? field.value.join(", ").toUpperCase()
                         : "Selecione os estados"}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -643,79 +662,6 @@ export function FieldsFilterProperties() {
         />
 
         {/* tipo de leilao */}
-        <FormField
-          control={form.control}
-          name="tipodeleilao"
-          render={({ field }) => (
-            <FormItem className="flex flex-col space-y-2">
-              <FormLabel>Tipo de Leilao</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      className={cn(
-                        "w-full justify-between",
-                        field.value?.length === 0 && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value?.length > 0
-                        ? field.value.join(", ").toUpperCase()
-                        : "Selecione o tipo de leilao"}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-[350px] p-0">
-                  <Command>
-                    <CommandInput placeholder="Pesquisar estado..." />
-                    <CommandList>
-                      <CommandEmpty>
-                        Nenhum tipo de leilao encontrado.
-                      </CommandEmpty>
-                      <CommandGroup>
-                        {tipoDeLeilao.map((tipodeleilao) => (
-                          <CommandItem
-                            key={tipodeleilao.value}
-                            value={tipodeleilao.label}
-                            onSelect={() => {
-                              const currentValue = field.value || [];
-                              if (currentValue.includes(tipodeleilao.value)) {
-                                form.setValue(
-                                  "tipodeleilao",
-                                  currentValue.filter(
-                                    (e) => e !== tipodeleilao.value
-                                  )
-                                );
-                              } else {
-                                form.setValue("tipodeleilao", [
-                                  ...currentValue,
-                                  tipodeleilao.value,
-                                ]);
-                              }
-                            }}
-                          >
-                            {tipodeleilao.label}
-                            <Check
-                              className={cn(
-                                "ml-auto",
-                                field.value?.includes(tipodeleilao.value)
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                              )}
-                            />
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
         {/* Min and Max Price */}
         <FormField
@@ -735,13 +681,11 @@ export function FieldsFilterProperties() {
                   prefix="R$ "
                   allowNegative={false}
                   onValueChange={({ value }) => {
-                    // Limpar formatação e remover R$, pontos e vírgulas
                     const cleanedValue = value
-                      ? value.replace(/[^\d]/g, "") // Remove qualquer coisa que não seja número
+                      ? value.replace(/[^\d]/g, "")
                       : "";
 
-                    // Atualizar o valor no formulário com o número limpo
-                    field.onChange(cleanedValue); // Envia o número limpo (apenas dígitos)
+                    field.onChange(cleanedValue);
                   }}
                 />
               </FormControl>
@@ -806,7 +750,7 @@ export function FieldsFilterProperties() {
         />
 
         {/* Datas */}
-        <div className="flex space-x-4">
+        {/* <div className="flex space-x-4">
           <FormField
             control={form.control}
             name="dataInicio"
@@ -839,9 +783,9 @@ export function FieldsFilterProperties() {
               </FormItem>
             )}
           />
-        </div>
+        </div> */}
 
-        <DrawerClose className="w-full">
+        <DrawerClose asChild className="w-full">
           <Button
             className="w-full bg-teal-600 hover:bg-teal-700 text-white"
             type="submit"
