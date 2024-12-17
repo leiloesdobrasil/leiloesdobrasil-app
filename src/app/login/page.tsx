@@ -121,7 +121,7 @@ export default function Login() {
           <div>
             <div className="flex flex-col px-6 py-8 mx-auto lg:py-0">
               {/* Logo visível apenas no mobile */}
-              <div className="mb-4 lg:hidden flex justify-center">
+              <div className="mb-4 lg:hidden flex justify-start">
                 <Image
                   src={currentTheme === "dark" ? LogoLight : LogoDark}
                   alt="logo"

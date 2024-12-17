@@ -118,7 +118,7 @@ export default function Signin() {
         pauseOnHover
         theme="colored"
       />
-      <ScrollArea className="w-1/2 p-12 flex flex-col justify-center overflow-y-auto h-screen">
+      <ScrollArea className="w-full lg:w-1/2 p-12 flex flex-col justify-center overflow-y-auto h-screen">
         <div className="absolute top-4 left-4">
           <Link
             href="/"
@@ -132,6 +132,17 @@ export default function Signin() {
           <div>
             <div className="flex flex-col px-6 py-8 mx-auto lg:py-0">
               <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+                <div className="mb-4 lg:hidden flex justify-start">
+                  <Image
+                    src={currentTheme === "dark" ? LogoLight : LogoDark}
+                    alt="logo"
+                    className="max-w-[200px] object-cover"
+                    style={{
+                      borderRadius: "6px",
+                    }}
+                    width={150}
+                  />
+                </div>
                 <h2 className="text-3xl font-bold mb-4">Bem-vindo!</h2>
                 <form
                   className="space-y-4 md:space-y-6"
@@ -325,12 +336,12 @@ export default function Signin() {
           </div>
         </div>
       </ScrollArea>
-      <div className="w-1/2 dark:bg-[#17181c] bg-[#f4f4f5] text-white p-12 flex flex-col justify-between rounded-md m-4">
+      <div className="hidden lg:flex w-1/2 dark:bg-[#17181c] bg-[#f4f4f5] text-white p-6 flex-col justify-between rounded-md m-4">
         <div>
           <Image
             src={currentTheme === "dark" ? LogoLight : LogoDark}
             alt={"logo"}
-            className=" max-w-[500px] object-cover"
+            className="max-w-[500px] object-cover"
             style={{
               borderRadius: "6px",
             }}

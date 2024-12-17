@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import { ModeToggle } from "@/components/ModeToggle";
 import AuctionsPropertiesView from "../views/AuctionsPropertiesView";
 import Sonar from "@/components/Sonar";
+import AnalyticsView from "../views/AnalyticsView";
 
 export default function Page() {
   const [activeView, setActiveView] = useState("imoveis");
@@ -31,7 +32,9 @@ export default function Page() {
     switch (activeView) {
       case "imoveis":
         return <AuctionsPropertiesView />;
-      case "veiculos":
+      case "minha atividade":
+        return <div>Exibindo visão de minha atividade.</div>;
+      case "veículos":
         return <div>Exibindo visão de Veículos.</div>;
       case "maquinas":
         return <div>Exibindo visão de Máquinas.</div>;
@@ -39,6 +42,8 @@ export default function Page() {
         return <div>Configurações do Sistema.</div>;
       case "Sonar":
         return <Sonar />;
+      case "Analytics":
+        return <AnalyticsView />;
       default:
         return <div>Selecione uma visão no menu lateral.</div>;
     }
