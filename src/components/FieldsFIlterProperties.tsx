@@ -83,14 +83,14 @@ interface FormValues {
 }
 
 const FormSchema = z.object({
-  estado: z.array(z.string().min(1, "Estado é obrigatório.")),
+  estado: z.array(z.string()).optional(),
   cidade: z.array(z.string()).optional(),
   bairro: z.array(z.string()).optional(),
   minPrice: z.string().optional(),
   maxPrice: z.string().optional(),
   desconto: z.string().optional(),
 
-  tipodeleilao: z.array(z.string().optional()),
+  tipodeleilao: z.array(z.string()).optional(),
 });
 
 export function FieldsFilterProperties() {
@@ -145,10 +145,16 @@ export function FieldsFilterProperties() {
     form.setValue("tipodeleilao", tipodeleilao);
   }, [router]);
 
+  const clearFilters = () => {
+    form.reset();
+
+    const currentUrl = window.location.pathname;
+    router.push(currentUrl);
+  };
+
   const buildQueryParams = (data: FormValues) => {
     let queryString = "";
 
-    // Construa a query string manualmente
     if (data.estado?.length) {
       queryString += `state=${data.estado.join(",")}&`;
     }
@@ -173,7 +179,6 @@ export function FieldsFilterProperties() {
       queryString += `discountPercentage=${sanitizePercentage(data.desconto)}&`;
     }
 
-    // Remove o último "&" e retorna a query string
     return queryString.slice(0, -1);
   };
 
@@ -407,17 +412,22 @@ export function FieldsFilterProperties() {
                             value={estado.label}
                             onSelect={() => {
                               const currentValue = field.value || [];
+                              let updatedValue;
+
+                              // Adicionar ou remover estado
                               if (currentValue.includes(estado.value)) {
-                                form.setValue(
-                                  "estado",
-                                  currentValue.filter((e) => e !== estado.value)
+                                updatedValue = currentValue.filter(
+                                  (e) => e !== estado.value
                                 );
                               } else {
-                                form.setValue("estado", [
-                                  ...currentValue,
-                                  estado.value,
-                                ]);
+                                updatedValue = [...currentValue, estado.value];
                               }
+
+                              // Atualizar o valor do estado
+                              form.setValue("estado", updatedValue);
+
+                              // Resetar o campo "cidade"
+                              form.setValue("cidade", []); // ou [] para arrays
                             }}
                           >
                             {estado.label}
@@ -763,6 +773,14 @@ export function FieldsFilterProperties() {
             </FormItem>
           )}
         />
+
+        <Button
+          className="p-0 text-teal-500"
+          variant="link"
+          onClick={clearFilters}
+        >
+          Limpar filtros
+        </Button>
 
         <DrawerClose asChild className="w-full">
           <Button
