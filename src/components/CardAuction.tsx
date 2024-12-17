@@ -325,9 +325,10 @@ export default function CardAuction({ items }: CardAuctionProps) {
                       item.road.slice(1).toLowerCase()}
                   </p>
 
-                  <div className=" space-x-[13px] w-full">
+                  <div className="space-x-[13px] w-full">
                     <div className="mb-4">
-                      {item.discountedPrice ? (
+                      {item.discountedPrice &&
+                      item.discountedPrice !== item.originalPrice ? (
                         <h4 className="font-geist-mono line-through text-xs text-red-400 mr-3">
                           {formattedPrice(item.originalPrice)}
                         </h4>
