@@ -53,11 +53,11 @@ const data = {
       items: [
         {
           title: "Todos os Imóveis",
-          url: "#",
+          url: "/dashboard",
         },
         {
           title: "Imóveis Caixa",
-          url: "#",
+          url: "/dashboard?bank=caixa",
         },
       ],
     },

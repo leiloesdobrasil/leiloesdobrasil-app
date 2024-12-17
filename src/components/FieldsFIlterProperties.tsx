@@ -79,8 +79,6 @@ interface FormValues {
   minPrice: string;
   maxPrice: string;
   desconto: string;
-  dataInicio: string | undefined;
-  dataFim: string | undefined;
   tipodeleilao: string[];
 }
 
@@ -91,8 +89,7 @@ const FormSchema = z.object({
   minPrice: z.string().optional(),
   maxPrice: z.string().optional(),
   desconto: z.string().optional(),
-  dataInicio: z.string().optional(),
-  dataFim: z.string().optional(),
+
   tipodeleilao: z.array(z.string().optional()),
 });
 
@@ -102,13 +99,9 @@ export function FieldsFilterProperties() {
   const sanitizePrice = (price: string | null) => {
     if (!price) return "";
 
-    // Decodificar o valor da URL
     const decodedPrice = decodeURIComponent(price);
 
-    // Remove 'R$', '+', e outros caracteres não numéricos
-    const cleanedPrice = decodedPrice
-      .replace("R$", "") // Remove 'R$'
-      .replace(/[^\d]/g, ""); // Remove tudo que não for número
+    const cleanedPrice = decodedPrice.replace("R$", "").replace(/[^\d]/g, "");
 
     return cleanedPrice;
   };
@@ -124,29 +117,23 @@ export function FieldsFilterProperties() {
       decodedPrice = percentage;
     }
 
-    const cleanedPrice = decodedPrice
-      .replace("%", "") // Remove '%'
-      .replace(/[^\d]/g, ""); // Remove tudo que não for número
+    const cleanedPrice = decodedPrice.replace("%", "").replace(/[^\d]/g, "");
 
     return cleanedPrice;
   };
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
 
-    // Decodificar o valor da URL e substituir o caractere especial de volta para vírgula
     const estadoFromUrl = queryParams.get("state")?.split(",") || [];
     const cidadeFromUrl = queryParams.get("city")?.split(",") || [];
     const bairroFromUrl = queryParams.get("district")?.split(",") || [];
     const tipodeleilao = queryParams.get("type")?.split(",") || [];
 
-    // Sanitização de preços com a função sanitizePrice
     const minPriceFromUrl = sanitizePrice(queryParams.get("minPrice"));
     const maxPriceFromUrl = sanitizePrice(queryParams.get("maxPrice"));
     const descontoFromUrl = sanitizePercentage(
       queryParams.get("discountPercentage")
     );
-    const dataInicioFromUrl = queryParams.get("startDate") || undefined;
-    const dataFimFromUrl = queryParams.get("endDate") || undefined;
 
     // Definir os valores no formulário
     form.setValue("estado", estadoFromUrl);
@@ -155,37 +142,39 @@ export function FieldsFilterProperties() {
     form.setValue("minPrice", minPriceFromUrl);
     form.setValue("maxPrice", maxPriceFromUrl);
     form.setValue("desconto", descontoFromUrl);
-    form.setValue("dataInicio", dataInicioFromUrl);
-    form.setValue("dataFim", dataFimFromUrl);
     form.setValue("tipodeleilao", tipodeleilao);
   }, [router]);
 
   const buildQueryParams = (data: FormValues) => {
-    const queryParams = new URLSearchParams();
+    let queryString = "";
 
+    // Construa a query string manualmente
     if (data.estado?.length) {
-      queryParams.set("state", data.estado.join(","));
+      queryString += `state=${data.estado.join(",")}&`;
     }
+
     if (data.cidade?.length) {
-      queryParams.set("city", data.cidade.join(","));
+      queryString += `city=${encodeURIComponent(data.cidade.join(","))}&`;
     }
-    if (data.bairro) {
-      queryParams.set("district", data.bairro.join(","));
+    if (data.bairro?.length) {
+      queryString += `district=${encodeURIComponent(data.bairro.join(","))}&`;
     }
-    if (data.tipodeleilao?.length)
-      queryParams.set("type", data.tipodeleilao.join(","));
+    if (data.tipodeleilao?.length) {
+      queryString += `type=${encodeURIComponent(data.tipodeleilao.join(","))}&`;
+    }
 
-    if (data.minPrice)
-      queryParams.set("minPrice", sanitizePrice(data.minPrice));
-    if (data.maxPrice)
-      queryParams.set("maxPrice", sanitizePrice(data.maxPrice));
+    if (data.minPrice) {
+      queryString += `minPrice=${sanitizePrice(data.minPrice)}&`;
+    }
+    if (data.maxPrice) {
+      queryString += `maxPrice=${sanitizePrice(data.maxPrice)}&`;
+    }
     if (data.desconto) {
-      queryParams.set("discountPercentage", sanitizePercentage(data.desconto));
+      queryString += `discountPercentage=${sanitizePercentage(data.desconto)}&`;
     }
-    if (data.dataInicio) queryParams.set("startDate", data.dataInicio);
-    if (data.dataFim) queryParams.set("endDate", data.dataFim);
 
-    return queryParams.toString();
+    // Remove o último "&" e retorna a query string
+    return queryString.slice(0, -1);
   };
 
   const [estados, setEstados] = useState<Estado[]>([]);
@@ -368,7 +357,7 @@ export function FieldsFilterProperties() {
       if (value) currentParams.set(key, value);
     });
 
-    router.push(`/dashboard?${currentParams.toString()}`);
+    router.push(`/dashboard?${queryParams}`);
   };
 
   const isCidadeDisabled = !selectedEstado || selectedEstado.length === 0;
@@ -395,14 +384,18 @@ export function FieldsFilterProperties() {
                         field.value?.length === 0 && "text-muted-foreground"
                       )}
                     >
-                      {field.value && field.value.length > 0
-                        ? field.value.join(", ").toUpperCase()
+                      {field.value?.length > 0
+                        ? `${field.value.slice(0, 2).join(", ")}${
+                            field.value.length > 2
+                              ? `, +${field.value.length - 2} estados...`
+                              : ""
+                          }`
                         : "Selecione os estados"}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-[350px] p-0">
+                <PopoverContent className="max-w-[300px] p-0">
                   <Command>
                     <CommandInput placeholder="Pesquisar estado..." />
                     <CommandList>
@@ -468,7 +461,11 @@ export function FieldsFilterProperties() {
                       )}
                     >
                       {field.value?.length > 0
-                        ? field.value.join(", ")
+                        ? `${field.value.slice(0, 2).join(", ")}${
+                            field.value.length > 2
+                              ? `, +${field.value.length - 2} cidades...`
+                              : ""
+                          }`
                         : "Selecione a cidade"}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
@@ -536,11 +533,15 @@ export function FieldsFilterProperties() {
                       disabled={isBairroDisabled}
                       className={cn(
                         "w-full justify-between",
-                        !field.value && "text-muted-foreground"
+                        field.value?.length === 0 && "text-muted-foreground"
                       )}
                     >
                       {field.value?.length > 0
-                        ? field.value.join(", ").toUpperCase()
+                        ? `${field.value.slice(0, 2).join(", ").toUpperCase()}${
+                            field.value.length > 2
+                              ? `, +${field.value.length - 2} bairros...`
+                              : ""
+                          }`
                         : "Selecione o Bairro"}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
@@ -598,7 +599,7 @@ export function FieldsFilterProperties() {
           name="tipodeleilao"
           render={({ field }) => (
             <FormItem className="flex flex-col space-y-2">
-              <FormLabel>Tipo de Leilao</FormLabel>
+              <FormLabel>Tipo de Leilão</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -611,18 +612,24 @@ export function FieldsFilterProperties() {
                       )}
                     >
                       {field.value?.length > 0
-                        ? field.value.join(", ").toUpperCase()
-                        : "Selecione o tipo de leilao"}
+                        ? `${field.value.slice(0, 1).join(", ").toUpperCase()}${
+                            field.value.length > 2
+                              ? `, +${
+                                  field.value.length - 2
+                                } tipos de leilões...`
+                              : ""
+                          }`
+                        : "Selecione o tipo de leilão"}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
                 <PopoverContent className="w-[350px] p-0">
                   <Command>
-                    <CommandInput placeholder="Pesquisar estado..." />
+                    <CommandInput placeholder="Pesquisar tipo de leilão..." />
                     <CommandList>
                       <CommandEmpty>
-                        Nenhum tipo de leilao encontrado.
+                        Nenhum tipo de leilão encontrado.
                       </CommandEmpty>
                       <CommandGroup>
                         {tipoDeLeilao.map((tipodeleilao) => (
@@ -666,8 +673,6 @@ export function FieldsFilterProperties() {
             </FormItem>
           )}
         />
-
-        {/* tipo de leilao */}
 
         {/* Min and Max Price */}
         <FormField
@@ -758,42 +763,6 @@ export function FieldsFilterProperties() {
             </FormItem>
           )}
         />
-
-        {/* Datas */}
-        {/* <div className="flex space-x-4">
-          <FormField
-            control={form.control}
-            name="dataInicio"
-            render={() => (
-              <FormItem>
-                <FormLabel>Data limite </FormLabel>
-                <FormControl>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-[350px] justify-start text-left font-normal",
-                          !date && "text-muted-foreground"
-                        )}
-                      >
-                        <CalendarIcon />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        selected={date}
-                        onSelect={setDate}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </FormControl>
-              </FormItem>
-            )}
-          />
-        </div> */}
 
         <DrawerClose asChild className="w-full">
           <Button
