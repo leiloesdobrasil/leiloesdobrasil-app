@@ -21,7 +21,16 @@ export function ShareFilter() {
   const [url, setUrl] = useState<string>("");
 
   useEffect(() => {
-    setUrl(window.location.href);
+    // Obter a URL atual
+    const currentUrl = window.location.href;
+
+    // Obter a query string
+    const queryParams = window.location.search;
+
+    // Se houver parâmetros de query, combine-os com a URL base
+    const fullUrl = queryParams ? currentUrl : `${currentUrl}${queryParams}`;
+
+    setUrl(fullUrl);
   }, []);
 
   const handleCopy = () => {
