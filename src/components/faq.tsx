@@ -6,26 +6,26 @@ import { ChevronDown } from 'lucide-react'
 
 const faqs = [
   {
-    question: "Como faço para participar de um leilão online?",
-    answer: "Para participar, primeiro você precisa se cadastrar em nossa plataforma. Após a aprovação do cadastro, você pode navegar pelos leilões ativos, escolher os itens de interesse e fazer seus lances. Recomendamos que você leia atentamente as regras de cada leilão antes de participar."
+    question: "Eu dou o lance no site Leilões do Brasil?",
+    answer: "Não. O site Leilões do Brasil apenas é um buscador que centraliza todas essas oportunidades em um só lugar, facilitando sua pesquisa. Quando você encontra o bem de interesse, você será redirecionado para o site do leiloeiro oficial responsável, onde fará o cadastro e participará do leilão."
   },
   {
-    question: "Quais são as formas de pagamento aceitas?",
-    answer: "Aceitamos diversas formas de pagamento, incluindo cartão de crédito, transferência bancária e boleto. As opções disponíveis serão apresentadas após o término do leilão para o vencedor."
+    question: "O Leilões do Brasil é um site de leilão?",
+    answer: "Não! Somos uma plataforma 'agregadora' dos bens de leilão, direcionando você para o site do leiloeiro que fará o leilão."
   },
   {
-    question: "Como funciona o processo de entrega dos itens arrematados?",
-    answer: "Após a confirmação do pagamento, o vendedor tem um prazo estipulado para enviar o item. Você pode acompanhar o status da entrega através da sua conta na plataforma. Para itens de grande porte, pode ser necessário combinar a retirada diretamente com o vendedor."
+    question: "Por que assinar o Leilões do Brasil?",
+    answer: "Atualmente temos o maior banco de dados de leilões do Brasil, sendo atualizada diariamente com novos leilões. Oferecemos segurança na escolha dos leilões, além de oferecer ferramentas para encontrar o que você quer."
   },
   {
-    question: "E se eu ganhar um leilão mas mudar de ideia?",
-    answer: "Ao ganhar um leilão, você está se comprometendo a comprar o item. Cancelamentos podem resultar em penalidades, como suspensão da conta. Por isso, recomendamos que você tenha certeza antes de dar um lance."
+    question: "Todos os bens que estão cadastrados no Leilões do Brasil são de leiloeiros oficiais?",
+    answer: "SIM. Todos os sites de leilão e leiloeiros são verificados antes de entrar em nossa lista e cadastrar em nosso banco de dados. Pode ter certeza que se está em nosso site, é de confiança."
   },
   {
-    question: "Como posso saber se um item é autêntico?",
-    answer: "Todos os itens em nossa plataforma passam por uma verificação prévia. Para itens de alto valor, oferecemos certificados de autenticidade. Além disso, você pode solicitar fotos adicionais ou informações ao vendedor antes de dar um lance."
+    question: "Tenho que pagar para utilizar a plataforma do Leilões do Brasil?",
+    answer: "Sim. Você pode escolher pagar semestralmente ou anualmente nossa plataforma. Você será de um grupo seleto de arrematantes com o privilégio de saber onde acontecerão os melhores bens em leilão em todo o Brasil."
   }
-]
+];
 
 export default function FAQ() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
