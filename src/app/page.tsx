@@ -6,15 +6,19 @@ import Testimonials from '@/components/testimonials'
 import FAQ from '@/components/faq'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import BillingPlans from '@/components/BillingPlans'
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-white to-emerald-50 dark:from-gray-950 dark:to-emerald-950">
+    <div className="min-h-screen flex flex-col dark:bg-[#17181c]">
       <Header />
       <main className='mt-10'>
         <Hero />
         <Features />
+        <BillingPlans />
+        <div className='p-4 rounded-md'>
         <Testimonials />
+        </div>
         <FAQ />
       </main>
       <Footer />

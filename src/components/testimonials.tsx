@@ -52,7 +52,7 @@ export default function Testimonials() {
   }
  
   return (
-    <section id="depoimentos" className="py-40 px-16 sm:px-6 lg:px-8 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-white via-teal-200 to-teal-50 from-teal-200 to-teal-400 dark:bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-white via-teal-700 to-[#17181c] from-teal-600 to-teal-400 ">
+    <section id="depoimentos" className="rounded-xl py-40 px-16 sm:px-6 lg:px-8 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-transparent via-teal-200 to-transparent from-teal-200 to-teal-400 dark:bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-transparent via-teal-700 to-[#17181c] from-teal-600 to-teal-400 ">
       <div className="container mx-auto">
         <h2 className="text-3xl sm:text-4xl font-semibold text-center mb-12 m- text-white">
           O Que Nossos Clientes Dizem
