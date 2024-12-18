@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { Activity, Car, Home, Radar, Tractor, ChartArea } from "lucide-react";
 
@@ -7,6 +9,7 @@ import LogoDark from "../assets/logodark.svg";
 import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
+
 import {
   Sidebar,
   SidebarContent,
@@ -93,14 +96,6 @@ export function AppSidebar({
   const { theme } = useTheme();
   const currentTheme = theme === "dark" ? "dark" : "light";
 
-  const [selectedMenu, setSelectedMenu] = React.useState<string>("");
-
-  // Função para alterar o item selecionado
-  const handleMenuSelect = (view: string) => {
-    setSelectedMenu(view); // Define o item como selecionado
-    onMenuSelect(view); // Passa o item selecionado para a função de callback
-  };
-
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -111,7 +106,7 @@ export function AppSidebar({
                 <Image
                   src={currentTheme === "dark" ? LogoLight : LogoDark}
                   alt={"logo"}
-                  className="w-full object-cover"
+                  className=" w-full object-cover"
                   style={{
                     borderRadius: "6px",
                   }}
@@ -122,31 +117,16 @@ export function AppSidebar({
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        {/* Renderiza o menu principal */}
         <NavMain
           items={data.navMain.map((item) => ({
             ...item,
-            onClick: () => handleMenuSelect(item.title.toLowerCase()),
-            className:
-              item.title.toLowerCase() === selectedMenu
-                ? "bg-blue-500 text-black" // Estilo de foco
-                : "hover:bg-gray-200", // Estilo para hover
-            "aria-selected":
-              item.title.toLowerCase() === selectedMenu ? "true" : "false",
-            tabIndex: 0, // Para navegação via teclado
+            onClick: () => onMenuSelect(item.title.toLowerCase()),
           }))}
         />
-        {/* Renderiza os projetos */}
         <NavProjects
           projects={data.projects.map((project) => ({
             ...project,
-            onClick: () => handleMenuSelect(project.name),
-            className:
-              project.name === selectedMenu
-                ? "bg-blue-500 text-white"
-                : "hover:bg-gray-200", // Estilo para hover
-            "aria-selected": project.name === selectedMenu ? "true" : "false",
-            tabIndex: 0, // Para navegação via teclado
+            onClick: () => onMenuSelect(project.name),
           }))}
         />
       </SidebarContent>

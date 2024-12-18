@@ -390,7 +390,7 @@ export function FieldsFilterProperties() {
                       )}
                     >
                       {field.value?.length > 0
-                        ? `${field.value.slice(0, 2).join(", ")}${
+                        ? `${field.value.slice(0, 2).join(", ").toUpperCase()}${
                             field.value.length > 2
                               ? `, +${field.value.length - 2} estados...`
                               : ""
@@ -426,8 +426,8 @@ export function FieldsFilterProperties() {
                               // Atualizar o valor do estado
                               form.setValue("estado", updatedValue);
 
-                              // Resetar o campo "cidade"
-                              form.setValue("cidade", []); // ou [] para arrays
+                              form.setValue("cidade", []);
+                              form.setValue("bairro", []);
                             }}
                           >
                             {estado.label}
@@ -547,7 +547,7 @@ export function FieldsFilterProperties() {
                       )}
                     >
                       {field.value?.length > 0
-                        ? `${field.value.slice(0, 2).join(", ").toUpperCase()}${
+                        ? `${field.value.slice(0, 2).join(", ")}${
                             field.value.length > 2
                               ? `, +${field.value.length - 2} bairros...`
                               : ""

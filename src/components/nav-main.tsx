@@ -39,8 +39,9 @@ export function NavMain({
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
-            <SidebarMenuItem>
+            <SidebarMenuItem className="group/menu-item">
               <SidebarMenuButton
+                className="group-focus-within/menu-item:text-teal-500"
                 asChild
                 tooltip={item.title}
                 onClick={item.onClick}

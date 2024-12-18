@@ -11,6 +11,7 @@ import { Calendar } from "lucide-react";
 import { getBaseUrl } from "@/utils/helper";
 import Modal from "./Modal";
 import * as Tooltip from "@radix-ui/react-tooltip";
+
 interface ImovelPracas {
   originalPrice: number;
   inclusionDate: string;
@@ -38,6 +39,8 @@ interface ImovelProps {
   imovelPracas: ImovelPracas[];
   liked?: number;
   index: number;
+  secondAuctionPrice: number;
+  description: string;
 }
 
 interface CardAuctionProps {
@@ -147,7 +150,11 @@ export default function CardAuction({ items }: CardAuctionProps) {
   };
 
   const openModal = (item: ImovelProps) => {
-    setSelectedItem(item);
+    const selectedItemForModal: ImovelProps = {
+      ...item,
+      docs: item.docs || "[]", // Add a fallback for docs if necessary
+    };
+    setSelectedItem(selectedItemForModal);
     setModalOpen(true);
   };
 
@@ -213,7 +220,7 @@ export default function CardAuction({ items }: CardAuctionProps) {
           return (
             <div
               key={index}
-              className={`relative w-[310px] p-3 m-1 shadow-lg transform hover:-translate-y-2 transition-transform duration-300 ease-in-out flex flex-col justify-between flex-warp 
+              className={`cursor-pointer relative w-[310px] p-3 m-1 shadow-lg transform hover:-translate-y-2 transition-transform duration-300 ease-in-out flex flex-col justify-between flex-warp 
 `}
               style={{
                 borderRadius: "16px",
@@ -274,7 +281,7 @@ export default function CardAuction({ items }: CardAuctionProps) {
                   </button>
                 </div>
 
-                <div>
+                <div onClick={() => openModal(item)}>
                   <Tooltip.Provider>
                     <Tooltip.Root>
                       <Tooltip.Trigger asChild>
@@ -423,17 +430,29 @@ export default function CardAuction({ items }: CardAuctionProps) {
               <div className="relative z-10 flex">
                 <button
                   type="button"
-                  className=" mr-4 more-info w-full bg-[#08A0A0] text-xs text-white font-bold py-2.5 px-4 rounded"
+                  className=" z-10 mr-4 more-info w-full bg-[#08A0A0] text-xs text-white font-bold py-2.5 px-4 rounded"
                   onClick={() => openModal(item)}
                 >
                   Saiba Mais
                 </button>
-                <button
-                  type="button"
-                  className=" more-info w-full text-xs dark:bg-[#292b31] bg-[#e9e9e9] dark:text-white text-black  py-2.5 px-5 rounded"
-                >
-                  Abrir no maps
-                </button>
+
+                {item.geolocation && (
+                  <button
+                    type="button"
+                    className=" more-info w-full text-xs dark:bg-[#292b31] bg-[#e9e9e9] dark:text-white text-black  py-2.5 px-5 rounded"
+                  >
+                    Abrir no Maps
+                  </button>
+                )}
+
+                {!item.geolocation && (
+                  <button
+                    type="button"
+                    className=" more-info w-full text-xs dark:bg-[#292b31] bg-[#e9e9e9] dark:text-white text-black  py-2.5 px-5 rounded"
+                  >
+                    Sem localização
+                  </button>
+                )}
               </div>
             </div>
           );

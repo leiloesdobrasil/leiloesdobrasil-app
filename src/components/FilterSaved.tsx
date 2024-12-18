@@ -1,4 +1,4 @@
-import { Copy, Share } from "lucide-react";
+import { Copy, Save } from "lucide-react";
 import { useState, useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -63,7 +63,8 @@ export function ShareFilter() {
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="secondary">
-            <Share /> Compartilhar
+            <Save />
+            Salvar Filtro
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">

@@ -5,7 +5,7 @@ import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
-import { ShareFilter } from "./ShareFilter";
+import { ShareFilter } from "./FilterSaved";
 import { OrderByFilter } from "./OrderByFilter";
 import { FilterButtonProperties } from "./FilterButtonProperties";
 import { PerPageSelect } from "./PerPageSelect";
