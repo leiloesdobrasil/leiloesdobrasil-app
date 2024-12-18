@@ -107,13 +107,20 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, selectedItem }) => {
   console.log(photos);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-      <div className="relative grid w-[80%] h-[80%] grid-cols-1 overflow-y-auto bg-background dark:bg-[#1f1f23] rounded-lg shadow-lg md:grid-cols-2">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
+      <div className="relative grid w-[90%] h-[90%] md:h-[80%] md:w-[80%] grid-cols-1 overflow-y-auto bg-background dark:bg-[#1f1f23] rounded-lg shadow-lg md:grid-cols-2">
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 flex items-center justify-center w-8 h-8 transition-all rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+          className="absolute z-10 top-5 right-5 md:top-3 md:right-3 flex items-center justify-center w-8 h-8 transition-all rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
         >
-          <X className="w-6 h-6" />
+          <X className="w-6 h-6 text-teal-500 md:text-current" />
         </button>
 
         {/* Seção de Fotos */}
@@ -131,9 +138,6 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, selectedItem }) => {
                       height={400}
                       className="object-cover w-full rounded-lg"
                     />
-                    {/* Botões do carrossel */}
-                    <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/70 text-black rounded-full hover:bg-white p-2" />
-                    <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/70 text-black rounded-full hover:bg-white p-2" />
                   </div>
                 </CarouselItem>
               ) : (
@@ -148,9 +152,12 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, selectedItem }) => {
                         height={400}
                         className="object-cover w-full rounded-lg"
                       />
-                      {/* Botões do carrossel */}
-                      <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/70 text-black rounded-full hover:bg-white p-2" />
-                      <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/70 text-black rounded-full hover:bg-white p-2" />
+                      {photos.length > 1 && (
+                        <>
+                          <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/70 text-black rounded-full hover:bg-white p-2" />
+                          <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/70 text-black rounded-full hover:bg-white p-2" />
+                        </>
+                      )}
                     </div>
                   </CarouselItem>
                 ))
@@ -160,7 +167,7 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, selectedItem }) => {
         </div>
 
         {/* Seção de Informações */}
-        <div className="flex flex-col justify-between p-6">
+        <div className="flex flex-col justify-between p-2 md:p-6">
           <div>
             <h2 className="mb-1 text-lg font-bold">{selectedItem.title}</h2>
             <div>
