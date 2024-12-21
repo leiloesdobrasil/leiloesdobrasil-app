@@ -1,105 +1,69 @@
-import { Copy, Save } from "lucide-react";
-import { useState, useEffect } from "react";
+"use client";
+
+import * as React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ToastContainer, toast, ToastOptions } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ArrowDownUp } from "lucide-react";
 
-export function ShareFilter() {
-  const [url, setUrl] = useState<string>("");
+export function FilterSaved() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [position, setPosition] = React.useState<string>("");
 
-  useEffect(() => {
-    // Obter a URL atual
-    const currentUrl = window.location.href;
+  const handleValueChange = (value: string) => {
+    setPosition(value);
 
-    // Obter a query string
-    const queryParams = window.location.search;
+    const params = new URLSearchParams(searchParams?.toString());
+    params.set("sort", value);
 
-    // Se houver parâmetros de query, combine-os com a URL base
-    const fullUrl = queryParams ? currentUrl : `${currentUrl}${queryParams}`;
-
-    setUrl(fullUrl);
-  }, []);
-
-  const handleCopy = () => {
-    navigator.clipboard
-      .writeText(url)
-      .then(() => {
-        toast.success("Link copiado com sucesso!", toastConfig);
-      })
-      .catch((error) => {
-        console.error("Erro ao copiar o link: ", error);
-        toast.error("Erro ao copiar o link.", toastConfig);
-      });
-  };
-
-  const toastConfig: ToastOptions = {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light dark:dark",
+    router.push(`?${params.toString()}`);
   };
 
   return (
-    <>
-      <ToastContainer />
-
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="secondary">
-            <Save />
-            Salvar Filtro
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Compartilhe sua pesquisa!</DialogTitle>
-            <DialogDescription>
-              Ao copiar você salva essa visão de tela.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex items-center space-x-2">
-            <div className="grid flex-1 gap-2">
-              <Label htmlFor="link" className="sr-only">
-                Link
-              </Label>
-              <Input id="link" value={url} readOnly />
-            </div>
-            <Button
-              type="button"
-              size="sm"
-              className="px-3"
-              onClick={handleCopy}
-            >
-              <span className="sr-only">Copiar</span>
-              <Copy />
-            </Button>
-          </div>
-          <DialogFooter className="sm:justify-start">
-            <DialogClose asChild>
-              <Button type="button" variant="secondary">
-                Fechar
-              </Button>
-            </DialogClose>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="secondary" className="ml-2 mr-2">
+          <ArrowDownUp /> Ordenar
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
+        <DropdownMenuLabel>Ordenar por:</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuRadioGroup
+          value={position}
+          onValueChange={handleValueChange}
+        >
+          <DropdownMenuRadioItem value="">Sem ordenação</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="endDateDesc">
+            Mais próximo de finalizar
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="endDateAsc">
+            Menos próximo de finalizar
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="priceDesc">
+            Maior valor
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="priceAsc">
+            Menor valor
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="discountDesc">
+            Maior desconto
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="discountAsc">
+            Menor desconto
+          </DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

@@ -5,7 +5,7 @@ import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
-import { ShareFilter } from "./FilterSaved";
+import { FilterSaved } from "./FilterSaved";
 import { OrderByFilter } from "./OrderByFilter";
 import { FilterButtonProperties } from "./FilterButtonProperties";
 import { PerPageSelect } from "./PerPageSelect";
@@ -32,7 +32,7 @@ function CardAuctionFilter() {
   };
 
   return (
-    <div className="flex items-center justify-between w-full p-2">
+    <div className="flex items-center justify-between w-full p-2 ">
       <div className="flex items-center">
         <div className="flex w-full max-w-sm items-center space-x-2">
           <div className="relative w-80">
@@ -52,7 +52,7 @@ function CardAuctionFilter() {
         <OrderByFilter />
         <PerPageSelect />
 
-        <ShareFilter />
+        <FilterSaved />
       </div>
     </div>
   );

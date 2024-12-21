@@ -212,10 +212,10 @@ export default function CardAuction({ items }: CardAuctionProps) {
 
           const hasDiscount =
             item.discountedPrice && item.discountedPrice !== item.originalPrice;
-          const multiplePayments =
-            item.typePayments && item.typePayments.length > 1;
 
           const hasPropertyType = item.propertyType != null;
+
+          const hasSaleType = item.saleType != null;
 
           return (
             <div
@@ -244,7 +244,11 @@ export default function CardAuction({ items }: CardAuctionProps) {
                 className="relative z-10 overflow-hidden"
                 style={{ borderRadius: "8px 8px 0 0" }}
               >
-                <div className="relative mb-3">
+                <div
+                  className="relative mb-3"
+                  onClick={() => openModal(item)} // Chama o modal ao clicar na imagem
+                  style={{ cursor: "pointer" }} // Indica ao usuário que é clicável
+                >
                   <Image
                     src={
                       item.photos && item.photos !== "[]"
@@ -259,26 +263,31 @@ export default function CardAuction({ items }: CardAuctionProps) {
                     width={272}
                     height={180}
                   />
-                  <button
-                    onClick={() => toggleVisibility(item.id)}
-                    className="ocult absolute top-3 right-14 p-2 rounded-full bg-opacity-70 bg-black hover:bg-opacity-100 transition-all duration-200"
+                  <div
+                    className="absolute top-3 right-4 flex space-x-2"
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    {hiddenItems.has(index) ? (
-                      <FaEye className="text-white" />
-                    ) : (
-                      <FaEyeSlash className="text-white" />
-                    )}
-                  </button>
-                  <button
-                    onClick={() => toggleFavorite(item.id, item.index)}
-                    className={`like absolute top-3 right-4 p-2 rounded-full transition-all duration-200 ${
-                      item.liked === 1
-                        ? "bg-red-500 text-white"
-                        : "bg-opacity-70 bg-black hover:bg-opacity-100"
-                    }`}
-                  >
-                    <FaHeart className="text-white" />
-                  </button>
+                    <button
+                      onClick={() => toggleVisibility(item.id)}
+                      className="ocult p-2 rounded-full bg-opacity-70 bg-black hover:bg-opacity-100 transition-all duration-200"
+                    >
+                      {hiddenItems.has(index) ? (
+                        <FaEye className="text-white" />
+                      ) : (
+                        <FaEyeSlash className="text-white" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => toggleFavorite(item.id, item.index)}
+                      className={`like p-2 rounded-full transition-all duration-200 ${
+                        item.liked === 1
+                          ? "bg-red-500 text-white"
+                          : "bg-opacity-70 bg-black hover:bg-opacity-100"
+                      }`}
+                    >
+                      <FaHeart className="text-white" />
+                    </button>
+                  </div>
                 </div>
 
                 <div onClick={() => openModal(item)}>
@@ -305,23 +314,21 @@ export default function CardAuction({ items }: CardAuctionProps) {
 
                   {/* Flags */}
                   {hasDiscount && (
-                    <span className="font-geist-mono mr-1 mb-2 inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-1.5 py-0.4 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
-                      <span className="font-geist-mono w-2 h-2 me-1 bg-yellow-500 rounded-full"></span>
+                    <span className="font-geist-mono mr-1 mb-1 inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-1 py-0.2 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
+                      <span className="w-1.5 h-1.5 me-1 bg-yellow-500 rounded-full"></span>
                       {item.discount + "%"}
                     </span>
                   )}
-                  {multiplePayments &&
-                    item.typePayments &&
-                    item.typePayments.replace(/[\[\]'"]/g, "") !== "" && (
-                      <span className="font-geist-mono mb-2 mr-1 inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-1.5 py-0.4 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                        <span className="font-geist-mono w-2 h-2 me-1 bg-blue-500 rounded-full"></span>
-                        {item.typePayments.replace(/[\[\]'"]/g, "")}
-                      </span>
-                    )}
                   {hasPropertyType && (
-                    <span className="font-geist-mono mb-2 inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-1.5 py-0.4 rounded-full dark:bg-green-900 dark:text-green-300">
-                      <span className="w-2 h-2 me-1 bg-green-500 rounded-full"></span>
+                    <span className="font-geist-mono mb-1 mr-1 inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-1 py-0.2 rounded-full dark:bg-green-900 dark:text-green-300">
+                      <span className="w-1.5 h-1.5 me-1 bg-green-500 rounded-full"></span>
                       {item.propertyType}
+                    </span>
+                  )}
+                  {hasSaleType && (
+                    <span className="font-geist-mono mb-2 inline-flex items-center bg-orange-100 text-orange-800 text-xs font-medium px-1 py-0.2 rounded-full dark:bg-orange-900 dark:text-orange-300">
+                      <span className="w-1.5 h-1.5 me-1 bg-orange-500 rounded-full"></span>
+                      {item.saleType}
                     </span>
                   )}
 
@@ -331,8 +338,7 @@ export default function CardAuction({ items }: CardAuctionProps) {
                     {item.road.charAt(0).toUpperCase() +
                       item.road.slice(1).toLowerCase()}
                   </p>
-
-                  <div className="space-x-[13px] w-full">
+                  <div className=" w-full">
                     <div className="mb-4">
                       {item.discountedPrice &&
                       item.discountedPrice !== item.originalPrice ? (
@@ -343,83 +349,58 @@ export default function CardAuction({ items }: CardAuctionProps) {
                         <div className="h-5 w-20" />
                       )}
                       <h1 className="font-geist-mono text-xl items-center font-semibold text-[#08A0A0]">
-                        {item.discountedPrice
-                          ? formattedPrice(item.discountedPrice)
-                          : formattedPrice(item.firstAuctionPrice)}
+                        {new Date(dataCadastroFormatada) < new Date() &&
+                        item.secondAuctionDate
+                          ? formattedPrice(item.secondAuctionPrice)
+                          : formattedPrice(item.firstAuctionPrice)}{" "}
                       </h1>
                     </div>
 
-                    <div className="flex ">
-                      <div className="flex mb-2 space-x-8">
-                        {item.firstAuctionDate && !item.secondAuctionDate ? (
-                          // Caso 1: Apenas dataCadastroFormatada presente
-                          <div className="flex items-center mb-5">
-                            <div>
-                              <div className="flex items-center justify-center dark:text-gray-400 text-gray-600">
-                                <Calendar className="w-4 h-4 mr-2 dark:text-gray-400 text-gray-600" />
-                                <div>
-                                  <span className="text-xs block">
-                                    Venda Direta
-                                  </span>
-                                  <span className="text-sm">
-                                    {dataCadastroFormatada}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
+                    <div className="flex mb-2">
+                      <div className="flex flex-col space-y-2 mb-3">
+                        {/* 1° Leilão */}
+                        {item.firstAuctionDate && (
+                          <div
+                            className={`flex items-center ${
+                              new Date(item.firstAuctionDate) < new Date()
+                                ? "line-through"
+                                : ""
+                            }`}
+                          >
+                            <Calendar className="w-4 h-4 mr-2 dark:text-gray-400 text-gray-600" />
+                            <span className="text-xs dark:text-gray-400 text-gray-600">
+                              1° leilão: {dataCadastroFormatada} -{" "}
+                              {formattedPrice(item.firstAuctionPrice)}
+                            </span>
                           </div>
-                        ) : !item.firstAuctionDate &&
-                          !item.secondAuctionDate ? (
-                          // Caso 2: Nenhuma data presente
-                          <div className="flex items-center mb-5">
-                            <div>
-                              <div className="flex items-center dark:text-gray-400 text-gray-600">
-                                <Calendar className="w-4 h-4 mr-2 dark:text-gray-400 text-gray-600" />
-                                <div>
-                                  <span className="text-sm block">
-                                    Sem data informada
-                                  </span>
-                                  <span className="text-xs">
-                                    Checar no site do leiloeiro
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
+                        )}
+
+                        {/* 2° Leilão */}
+                        {item.secondAuctionDate && (
+                          <div
+                            className={`flex items-center ${
+                              new Date(item.secondAuctionDate) < new Date()
+                                ? "line-through"
+                                : ""
+                            }`}
+                          >
+                            <Calendar className="w-4 h-4 mr-2 dark:text-gray-400 text-gray-600" />
+                            <span className="text-xs dark:text-gray-400 text-gray-600">
+                              2° leilão: {dataFimFormatada} -{" "}
+                              {formattedPrice(item.secondAuctionPrice)}
+                            </span>
                           </div>
-                        ) : (
-                          // Caso 3: Ambas as datas presentes
-                          <>
-                            <div className="flex items-center mb-5">
-                              <div>
-                                <div className="flex items-center dark:text-gray-400 text-gray-600">
-                                  <Calendar className="w-4 h-4 mr-2 dark:text-gray-400 text-gray-600" />
-                                  <div>
-                                    <span className="text-xs block">
-                                      1° leilão
-                                    </span>
-                                    <span className="text-sm">
-                                      {dataCadastroFormatada}
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex items-center mb-5">
-                              <div>
-                                <div className="flex items-center dark:text-gray-400 text-gray-600">
-                                  <Calendar className="w-4 h-4 mr-2 dark:text-gray-400 text-gray-600" />
-                                  <div>
-                                    <span className="text-xs block">
-                                      2° leilão
-                                    </span>
-                                    <span className="text-sm">
-                                      {dataFimFormatada}
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </>
+                        )}
+
+                        {/* Caso sem datas */}
+                        {!item.firstAuctionDate && !item.secondAuctionDate && (
+                          <div className="flex items-center mb-5">
+                            <Calendar className="w-4 h-4 mr-2 dark:text-gray-400 text-gray-600" />
+                            <span className="text-xs">Sem data informada</span>
+                            <span className="text-xs ml-2">
+                              Checar no site do leiloeiro
+                            </span>
+                          </div>
                         )}
                       </div>
                     </div>

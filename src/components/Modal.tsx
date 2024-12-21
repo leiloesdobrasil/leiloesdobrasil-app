@@ -104,6 +104,8 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, selectedItem }) => {
 
   const hasPropertyType = selectedItem.propertyType != null;
 
+  const hasSaleType = selectedItem.saleType != null;
+
   console.log(photos);
 
   return (
@@ -115,7 +117,7 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, selectedItem }) => {
         }
       }}
     >
-      <div className="relative grid w-[90%] h-[90%] md:h-[80%] md:w-[80%] grid-cols-1 overflow-y-auto bg-background dark:bg-[#1f1f23] rounded-lg shadow-lg md:grid-cols-2">
+      <div className="relative grid w-[90%] h-[80%] md:h-[80%] md:w-[80%] grid-cols-1 overflow-y-auto bg-background dark:bg-[#1f1f23] rounded-lg shadow-lg md:grid-cols-2">
         <button
           onClick={onClose}
           className="absolute z-10 top-5 right-5 md:top-3 md:right-3 flex items-center justify-center w-8 h-8 transition-all rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
@@ -172,23 +174,31 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, selectedItem }) => {
             <h2 className="mb-1 text-lg font-bold">{selectedItem.title}</h2>
             <div>
               {hasDiscount && (
-                <span className="font-geist-mono mr-1 mb-2 inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-1.5 py-0.4 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
-                  <span className="font-geist-mono w-2 h-2 me-1 bg-yellow-500 rounded-full"></span>
+                <span className="font-geist-mono mr-1 mb-1 inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-1 py-0.2 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
+                  <span className="w-1.5 h-1.5 me-1 bg-yellow-500 rounded-full"></span>
                   {selectedItem.discount + "%"}
                 </span>
               )}
               {multiplePayments &&
                 selectedItem.typePayments &&
-                selectedItem.typePayments.replace(/[\[\]'"]/g, "") !== "" && (
-                  <span className="font-geist-mono mb-2 mr-1 inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-1.5 py-0.4 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                    <span className="font-geist-mono w-2 h-2 me-1 bg-blue-500 rounded-full"></span>
+                selectedItem.typePayments.replace(/[\[\]'"]/g, "") !== "" &&
+                selectedItem.typePayments.replace(/[\[\]'"]/g, "") !==
+                  "À Vista" && (
+                  <span className="font-geist-mono mb-1 mr-1 inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-1 py-0.2 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                    <span className="w-1.5 h-1.5 me-1 bg-blue-500 rounded-full"></span>
                     {selectedItem.typePayments.replace(/[\[\]'"]/g, "")}
                   </span>
                 )}
               {hasPropertyType && (
-                <span className="font-geist-mono mb-2 inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-1.5 py-0.4 rounded-full dark:bg-green-900 dark:text-green-300">
-                  <span className="w-2 h-2 me-1 bg-green-500 rounded-full"></span>
+                <span className="font-geist-mono mb-1 mr-1 inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-1 py-0.2 rounded-full dark:bg-green-900 dark:text-green-300">
+                  <span className="w-1.5 h-1.5 me-1 bg-green-500 rounded-full"></span>
                   {selectedItem.propertyType}
+                </span>
+              )}
+              {hasSaleType && (
+                <span className="font-geist-mono mb-2 inline-flex items-center bg-orange-100 text-orange-800 text-xs font-medium px-1 py-0.2 rounded-full dark:bg-orange-900 dark:text-orange-300">
+                  <span className="w-1.5 h-1.5 me-1 bg-orange-500 rounded-full"></span>
+                  {selectedItem.saleType}
                 </span>
               )}
             </div>
@@ -209,36 +219,34 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, selectedItem }) => {
                   <tr>
                     <th className="px-6 py-3">Leilão</th>
                     <th className="px-6 py-3">Data</th>
-                    <th className="px-6 py-3">Preço Original</th>
-                    <th className="px-6 py-3">Preço Atual</th>
+                    <th className="px-6 py-3">Valor do lance</th>
+                    <th className="px-6 py-3">Valor de avaliação</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="bg-background dark:bg-[#1f1f23] text-black dark:text-white border-b ">
-                    <td className="px-6 py-4">{selectedItem.saleType}</td>
+                    <td className="px-6 py-4">1ª Leilão</td>
                     <td className="px-6 py-4">
                       {formatDate(selectedItem.firstAuctionDate)}
                     </td>
                     <td className="px-6 py-4">
-                      {formatCurrency(selectedItem.originalPrice)}
+                      {formatCurrency(selectedItem.firstAuctionPrice)}
                     </td>
                     <td className="px-6 py-4">
                       {selectedItem.discountedPrice
                         ? formatCurrency(selectedItem.discountedPrice)
-                        : "Imóvel sem desconto"}
+                        : "Valor não informado"}
                     </td>
                   </tr>
                   {selectedItem.secondAuctionDate &&
                     selectedItem.secondAuctionPrice && (
                       <tr className="bg-background dark:bg-[#1f1f23] text-black dark:text-white border-b">
-                        <td className="px-6 py-4">
-                          {selectedItem.saleType} (2ª Leilão)
-                        </td>
+                        <td className="px-6 py-4">2ª Leilão</td>
                         <td className="px-6 py-4">
                           {formatDate(selectedItem.secondAuctionDate)}
                         </td>
                         <td className="px-6 py-4">
-                          {formatCurrency(selectedItem.originalPrice)}
+                          {formatCurrency(selectedItem.secondAuctionPrice)}
                         </td>
                         <td className="px-6 py-4">
                           {formatCurrency(selectedItem.secondAuctionPrice)}
@@ -291,27 +299,6 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, selectedItem }) => {
               </p>
             )}
           </div>
-
-          <h3 className="mb-2 text-lg font-semibold">Valores e descontos:</h3>
-          {selectedItem.firstAuctionPrice && (
-            <div className="space-x-[13px] w-full flex">
-              <div className="mb-4">
-                {selectedItem.discountedPrice &&
-                selectedItem.discountedPrice !== selectedItem.originalPrice ? (
-                  <h4 className="font-geist-mono line-through text-sm text-red-400 mr-3">
-                    {formatCurrency(selectedItem.originalPrice)}
-                  </h4>
-                ) : (
-                  <div className="h-5 w-20" />
-                )}
-                <h1 className="font-geist-mono text-3xl items-center font-semibold text-[#08A0A0]">
-                  {selectedItem.discountedPrice
-                    ? formatCurrency(selectedItem.discountedPrice)
-                    : formatCurrency(selectedItem.firstAuctionPrice)}
-                </h1>
-              </div>
-            </div>
-          )}
 
           {/* Botões de Ação */}
           <div className=" w-full gap-4 mt-4 ">

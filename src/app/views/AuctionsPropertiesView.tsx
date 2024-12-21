@@ -106,8 +106,9 @@ export default function AuctionsPropertiesView() {
   return (
     <>
       {" "}
-      {/* Adicionando ref no container */}
-      <CardAuctionFilter />
+      <div className="hidden md:block">
+        <CardAuctionFilter />
+      </div>
       {loading ? (
         <div className="flex flex-wrap justify-center">
           {Array.from({ length: 10 }).map((_, index) => (
