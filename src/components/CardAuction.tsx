@@ -7,7 +7,7 @@ import { FaHeart, FaEye, FaEyeSlash } from "react-icons/fa";
 import { ToastContainer, toast, ToastOptions } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import { Calendar } from "lucide-react";
+import { Calendar, MapPin } from "lucide-react";
 import { getBaseUrl } from "@/utils/helper";
 import Modal from "./Modal";
 import * as Tooltip from "@radix-ui/react-tooltip";
@@ -41,6 +41,8 @@ interface ImovelProps {
   index: number;
   secondAuctionPrice: number;
   description: string;
+  city: string;
+  state: string;
 }
 
 interface CardAuctionProps {
@@ -358,6 +360,13 @@ export default function CardAuction({ items }: CardAuctionProps) {
 
                     <div className="flex mb-2">
                       <div className="flex flex-col space-y-2 mb-3">
+                        <div className={`flex items-center`}>
+                          <MapPin className="w-4 h-4 mr-2 dark:text-gray-400 text-gray-600" />
+                          <span className="text-xs dark:text-gray-400 text-gray-600">
+                            {item.city} - {item.state}
+                          </span>
+                        </div>
+
                         {/* 1° Leilão */}
                         {item.firstAuctionDate && (
                           <div
