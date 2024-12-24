@@ -363,7 +363,14 @@ export default function CardAuction({ items }: CardAuctionProps) {
                         <div className={`flex items-center`}>
                           <MapPin className="w-4 h-4 mr-2 dark:text-gray-400 text-gray-600" />
                           <span className="text-xs dark:text-gray-400 text-gray-600">
-                            {item.city} - {item.state}
+                            {item.city
+                              .toLowerCase()
+                              .split(" ")
+                              .map(
+                                (word) => word[0].toUpperCase() + word.slice(1)
+                              )
+                              .join(" ")}{" "}
+                            - {item.state}
                           </span>
                         </div>
 
