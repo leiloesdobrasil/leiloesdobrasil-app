@@ -28,23 +28,18 @@ export default function AuctionsPropertiesView() {
     }
 
     try {
-      // Obtém os parâmetros atuais da URL
       const params = Object.fromEntries(searchParams.entries());
 
-      // Define os parâmetros padrão
       const defaultParams = {
         perPage: params.perPage || "15",
         page: params.page || "1",
       };
 
-      // Mistura os parâmetros existentes com os valores padrão
       const apiParams = { ...defaultParams, ...params };
 
-      // Atualiza a URL para refletir todos os parâmetros
       const newParams = new URLSearchParams(apiParams);
       router.push(`/dashboard?${newParams.toString()}`, undefined);
 
-      // Faz a requisição à API com os parâmetros misturados
       const response = await api.get("/auctions", {
         params: apiParams,
         headers: {
@@ -86,26 +81,21 @@ export default function AuctionsPropertiesView() {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
 
-    // Atualiza os parâmetros da URL com o novo valor de página
     const newParams = new URLSearchParams(searchParams.toString());
     newParams.set("page", page.toString());
 
-    // Navega para a nova página com os parâmetros atualizados
     router.push(`/dashboard?${newParams.toString()}`, undefined);
   };
 
   useEffect(() => {
-    // Obtém o valor da página diretamente da URL e atualiza o estado
     const pageFromUrl = parseInt(searchParams.get("page") || "1");
     setCurrentPage(pageFromUrl);
 
-    // Chama a função para buscar os leilões sempre que a URL mudar
     fetchAuctions();
   }, [searchParams, fetchAuctions]);
 
   return (
     <>
-      {" "}
       <div className="hidden md:block">
         <CardAuctionFilter />
       </div>

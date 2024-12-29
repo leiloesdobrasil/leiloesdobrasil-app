@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowDownUp } from "lucide-react";
+import { Save } from "lucide-react";
 
 export function FilterSaved() {
   const router = useRouter();
@@ -33,34 +33,18 @@ export function FilterSaved() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="secondary" className="ml-2 mr-2">
-          <ArrowDownUp /> Ordenar
+          <Save /> Filtros Salvos
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>Ordenar por:</DropdownMenuLabel>
+        <DropdownMenuLabel>Meus filtros:</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup
           value={position}
           onValueChange={handleValueChange}
         >
-          <DropdownMenuRadioItem value="">Sem ordenação</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="endDateDesc">
-            Mais próximo de finalizar
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="endDateAsc">
-            Menos próximo de finalizar
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="priceDesc">
-            Maior valor
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="priceAsc">
-            Menor valor
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="discountDesc">
-            Maior desconto
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="discountAsc">
-            Menor desconto
+            Aqui vao estar os filtros salvos
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
