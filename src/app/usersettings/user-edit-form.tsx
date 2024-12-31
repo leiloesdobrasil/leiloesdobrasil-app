@@ -14,7 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "react-toastify";
 import { PasswordConfirmModal } from "./password-confirm-modal";
 
 const formSchema = z.object({
@@ -54,24 +53,15 @@ export function UserEditForm() {
     },
   });
 
-  function onSubmit(data: FormValues) {
+  function onSubmit() {
     if (changedFields.size > 0) {
       setIsModalOpen(true);
-    } else {
-      toast({
-        title: "Nenhuma alteração",
-        description: "Nenhum campo foi alterado.",
-      });
     }
   }
 
-  function handlePasswordConfirm(password: string) {
+  function handlePasswordConfirm() {
     setIsModalOpen(false);
-    // Aqui você normalmente enviaria as atualizações para o backend
-    toast({
-      title: "Dados atualizados",
-      description: "Suas informações foram atualizadas com sucesso.",
-    });
+
     setChangedFields(new Set());
   }
 
