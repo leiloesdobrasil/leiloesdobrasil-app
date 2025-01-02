@@ -78,7 +78,7 @@ export function UserEditForm() {
                 <FormLabel>{field}</FormLabel>
                 <FormControl>
                   <Input
-                    className="h-9 text-sm" // Reduzindo o tamanho do input
+                    className="h-9 text-sm"
                     onChange={(e) => {
                       onChange(e);
                       setChangedFields((prev) =>
